@@ -50,7 +50,11 @@ export class VehicleRepository implements IVehicleRepository {
   }
 
   async findAll(): Promise<Vehicle[]> {
-    return prisma.vehicle.findMany();
+    return prisma.vehicle.findMany({
+      orderBy: {
+        createdAt: 'desc'
+      }
+    });
   }
 
   async search(query: VehicleSearchQuery): Promise<Vehicle[]> {
@@ -68,15 +72,10 @@ export class VehicleRepository implements IVehicleRepository {
       where.category = { contains: query.category, mode: 'insensitive' };
     }
 
-    if (query.minPrice !== undefined || query.maxPrice !== undefined) {
-      where.price = {};
-      if (query.minPrice !== undefined) {
-        where.price.gte = query.minPrice;
-      }
-      if (query.maxPrice !== undefined) {
-        where.price.lte = query.maxPrice;
-      }
-    }
+    where.price = {
+      ...(query.minPrice !== undefined && { gte: query.minPrice }),
+      ...(query.maxPrice !== undefined && { lte: query.maxPrice }),
+    };
 
     return prisma.vehicle.findMany({
       where,

@@ -1,5 +1,6 @@
-import { IVehicleRepository, CreateVehicleData, UpdateVehicleData, VehicleSearchQuery } from '../repositories/vehicle.repository';
+import { IVehicleRepository, VehicleSearchQuery } from '../repositories/vehicle.repository';
 import { Vehicle } from '../generated/prisma/client';
+import { VehicleNotFoundError } from '../errors/VehicleNotFoundError';
 
 export interface AddVehicleDto {
   make: string;
@@ -65,7 +66,7 @@ export class VehicleService implements IVehicleService {
   async updateVehicle(id: string, dto: UpdateVehicleDto): Promise<Vehicle> {
     const existingVehicle = await this.vehicleRepository.findById(id);
     if (!existingVehicle) {
-      throw new Error('Vehicle not found');
+      throw new VehicleNotFoundError();
     }
 
     if (dto.price !== undefined && dto.price < 0) {
@@ -76,7 +77,12 @@ export class VehicleService implements IVehicleService {
       throw new Error('Quantity cannot be negative');
     }
 
-    return this.vehicleRepository.update(id, dto);
+    return this.vehicleRepository.update(id, {
+      make: dto.make?.trim(),
+      model: dto.model?.trim(),
+      category: dto.category?.trim(),
+      imageUrl: dto.imageUrl?.trim()
+    });
   }
 
   async deleteVehicle(id: string): Promise<Vehicle> {
