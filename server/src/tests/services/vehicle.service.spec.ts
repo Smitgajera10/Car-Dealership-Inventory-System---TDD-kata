@@ -1,7 +1,8 @@
 import { VehicleService } from '../../services/vehicle.service';
 import { IVehicleRepository } from '../../repositories/vehicle.repository';
+import { VehicleNotFoundError } from '../../errors/VehicleNotFoundError';
 
-describe('VehicleService - Add & Search', () => {
+describe('VehicleService', () => {
   let vehicleService: VehicleService;
   let mockVehicleRepository: jest.Mocked<IVehicleRepository>;
 
@@ -109,6 +110,80 @@ describe('VehicleService - Add & Search', () => {
 
       expect(mockVehicleRepository.search).toHaveBeenCalledWith(query);
       expect(result).toEqual([mockVehicle]);
+    });
+  });
+
+  describe('updateVehicle', () => {
+    it('should update vehicle details successfully', async () => {
+      const updateDto = {
+        price: 24000,
+        make: '  Honda  ',
+      };
+
+      const updatedVehicle = { ...mockVehicle, price: 24000, make: 'Honda' };
+
+      mockVehicleRepository.findById.mockResolvedValue(mockVehicle);
+      mockVehicleRepository.update.mockResolvedValue(updatedVehicle);
+
+      const result = await vehicleService.updateVehicle('veh-uuid-1', updateDto);
+
+      expect(mockVehicleRepository.findById).toHaveBeenCalledWith('veh-uuid-1');
+      expect(mockVehicleRepository.update).toHaveBeenCalledWith('veh-uuid-1', {
+        make: 'Honda',
+        model: undefined,
+        category: undefined,
+        price: 24000,
+        quantity: undefined,
+        imageUrl: undefined,
+      });
+      expect(result).toEqual(updatedVehicle);
+    });
+
+    it('should throw VehicleNotFoundError when vehicle is not found for update', async () => {
+      mockVehicleRepository.findById.mockResolvedValue(null);
+
+      await expect(
+        vehicleService.updateVehicle('invalid-id', { price: 24000 })
+      ).rejects.toThrow(VehicleNotFoundError);
+      expect(mockVehicleRepository.update).not.toHaveBeenCalled();
+    });
+
+    it('should throw an error if updated price is negative', async () => {
+      mockVehicleRepository.findById.mockResolvedValue(mockVehicle);
+
+      await expect(
+        vehicleService.updateVehicle('veh-uuid-1', { price: -100 })
+      ).rejects.toThrow('Price cannot be negative');
+      expect(mockVehicleRepository.update).not.toHaveBeenCalled();
+    });
+
+    it('should throw an error if updated quantity is negative', async () => {
+      mockVehicleRepository.findById.mockResolvedValue(mockVehicle);
+
+      await expect(
+        vehicleService.updateVehicle('veh-uuid-1', { quantity: -5 })
+      ).rejects.toThrow('Quantity cannot be negative');
+      expect(mockVehicleRepository.update).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('deleteVehicle', () => {
+    it('should delete vehicle when it exists', async () => {
+      mockVehicleRepository.findById.mockResolvedValue(mockVehicle);
+      mockVehicleRepository.delete.mockResolvedValue(mockVehicle);
+
+      const result = await vehicleService.deleteVehicle('veh-uuid-1');
+
+      expect(mockVehicleRepository.findById).toHaveBeenCalledWith('veh-uuid-1');
+      expect(mockVehicleRepository.delete).toHaveBeenCalledWith('veh-uuid-1');
+      expect(result).toEqual(mockVehicle);
+    });
+
+    it('should throw VehicleNotFoundError when trying to delete non-existent vehicle', async () => {
+      mockVehicleRepository.findById.mockResolvedValue(null);
+
+      await expect(vehicleService.deleteVehicle('invalid-id')).rejects.toThrow(VehicleNotFoundError);
+      expect(mockVehicleRepository.delete).not.toHaveBeenCalled();
     });
   });
 });
