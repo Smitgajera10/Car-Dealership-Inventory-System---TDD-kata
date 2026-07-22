@@ -78,17 +78,19 @@ export class VehicleService implements IVehicleService {
     }
 
     return this.vehicleRepository.update(id, {
-      make: dto.make?.trim(),
-      model: dto.model?.trim(),
-      category: dto.category?.trim(),
-      imageUrl: dto.imageUrl?.trim()
+      make: dto.make !== undefined ? dto.make.trim() : undefined,
+      model: dto.model !== undefined ? dto.model.trim() : undefined,
+      category: dto.category !== undefined ? dto.category.trim() : undefined,
+      price: dto.price,
+      quantity: dto.quantity,
+      imageUrl: dto.imageUrl !== undefined ? (dto.imageUrl ? dto.imageUrl.trim() : null) : undefined,
     });
   }
 
   async deleteVehicle(id: string): Promise<Vehicle> {
     const existingVehicle = await this.vehicleRepository.findById(id);
     if (!existingVehicle) {
-      throw new Error('Vehicle not found');
+      throw new VehicleNotFoundError();
     }
 
     return this.vehicleRepository.delete(id);
