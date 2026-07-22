@@ -1,6 +1,7 @@
 import request from 'supertest';
 import { app } from '../../app';
-import { AuthService } from '../../services/auth.service';
+import { AuthService, AuthResponse } from '../../services/auth.service';
+import { User } from '../../generated/prisma/client';
 
 describe('Auth API Endpoints (/api/auth)', () => {
   beforeEach(() => {
@@ -18,7 +19,9 @@ describe('Auth API Endpoints (/api/auth)', () => {
         updatedAt: new Date().toISOString(),
       };
 
-      jest.spyOn(AuthService.prototype, 'register').mockResolvedValue(mockCreatedUser as any);
+      jest
+        .spyOn(AuthService.prototype, 'register')
+        .mockResolvedValue(mockCreatedUser as unknown as User);
 
       const response = await request(app)
         .post('/api/auth/register')
@@ -75,7 +78,9 @@ describe('Auth API Endpoints (/api/auth)', () => {
         token: 'mock-jwt-token-string',
       };
 
-      jest.spyOn(AuthService.prototype, 'login').mockResolvedValue(mockAuthResponse as any);
+      jest
+        .spyOn(AuthService.prototype, 'login')
+        .mockResolvedValue(mockAuthResponse as unknown as AuthResponse);
 
       const response = await request(app)
         .post('/api/auth/login')
