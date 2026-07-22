@@ -52,6 +52,158 @@ describe('VehicleService', () => {
       expect(result).toEqual(mockVehicle);
     });
 
+    it('should reject empty make', async () => {
+      const dto = {
+        make: '   ',
+        model: 'Civic',
+        category: 'Sedan',
+        price: 22000,
+        quantity: 3,
+      };
+
+      await expect(vehicleService.addVehicle(dto)).rejects.toThrow('Make is required');
+      expect(mockVehicleRepository.create).not.toHaveBeenCalled();
+    });
+
+    it('should reject empty model', async () => {
+      const dto = {
+        make: 'Honda',
+        model: '   ',
+        category: 'Sedan',
+        price: 22000,
+        quantity: 3,
+      };
+
+      await expect(vehicleService.addVehicle(dto)).rejects.toThrow('Model is required');
+      expect(mockVehicleRepository.create).not.toHaveBeenCalled();
+    });
+
+    it('should reject empty category', async () => {
+      const dto = {
+        make: 'Honda',
+        model: 'Civic',
+        category: '   ',
+        price: 22000,
+        quantity: 3,
+      };
+
+      await expect(vehicleService.addVehicle(dto)).rejects.toThrow('Category is required');
+      expect(mockVehicleRepository.create).not.toHaveBeenCalled();
+    });
+
+    it('should trim make, model, and category', async () => {
+      const dto = {
+        make: '  Honda  ',
+        model: '  Civic  ',
+        category: '  Sedan  ',
+        price: 22000,
+        quantity: 3,
+      };
+
+      mockVehicleRepository.create.mockResolvedValue({
+        ...mockVehicle,
+        make: 'Honda',
+        model: 'Civic',
+        category: 'Sedan',
+        imageUrl: null,
+      });
+
+      await vehicleService.addVehicle(dto);
+
+      expect(mockVehicleRepository.create).toHaveBeenCalledWith({
+        make: 'Honda',
+        model: 'Civic',
+        category: 'Sedan',
+        price: 22000,
+        quantity: 3,
+        imageUrl: null,
+      });
+    });
+
+    it('should trim imageUrl when provided', async () => {
+      const dto = {
+        make: 'Honda',
+        model: 'Civic',
+        category: 'Sedan',
+        price: 22000,
+        quantity: 3,
+        imageUrl: '  http://example.com/civic.jpg  ',
+      };
+
+      mockVehicleRepository.create.mockResolvedValue(mockVehicle);
+
+      await vehicleService.addVehicle(dto);
+
+      expect(mockVehicleRepository.create).toHaveBeenCalledWith({
+        make: 'Honda',
+        model: 'Civic',
+        category: 'Sedan',
+        price: 22000,
+        quantity: 3,
+        imageUrl: 'http://example.com/civic.jpg',
+      });
+    });
+
+    it('should convert undefined or empty string imageUrl to null', async () => {
+      const dto = {
+        make: 'Honda',
+        model: 'Civic',
+        category: 'Sedan',
+        price: 22000,
+        quantity: 3,
+      };
+
+      mockVehicleRepository.create.mockResolvedValue({ ...mockVehicle, imageUrl: null });
+
+      await vehicleService.addVehicle(dto);
+
+      expect(mockVehicleRepository.create).toHaveBeenCalledWith({
+        make: 'Honda',
+        model: 'Civic',
+        category: 'Sedan',
+        price: 22000,
+        quantity: 3,
+        imageUrl: null,
+      });
+    });
+
+    it('should allow quantity = 0 to succeed', async () => {
+      const dto = {
+        make: 'Honda',
+        model: 'Civic',
+        category: 'Sedan',
+        price: 22000,
+        quantity: 0,
+      };
+
+      mockVehicleRepository.create.mockResolvedValue({ ...mockVehicle, quantity: 0 });
+
+      const result = await vehicleService.addVehicle(dto);
+
+      expect(mockVehicleRepository.create).toHaveBeenCalledWith({
+        make: 'Honda',
+        model: 'Civic',
+        category: 'Sedan',
+        price: 22000,
+        quantity: 0,
+        imageUrl: null,
+      });
+      expect(result.quantity).toBe(0);
+    });
+
+    it('should reject price = 0 as price must be greater than 0', async () => {
+      const dto = {
+        make: 'Honda',
+        model: 'Civic',
+        category: 'Sedan',
+        price: 0,
+        quantity: 3,
+      };
+
+      await expect(vehicleService.addVehicle(dto)).rejects.toThrow('Price must be greater than 0');
+      expect(mockVehicleRepository.create).not.toHaveBeenCalled();
+    });
+
     it('should throw an error if price is negative', async () => {
       const dto = {
         make: 'Honda',
@@ -61,7 +213,7 @@ describe('VehicleService', () => {
         quantity: 3,
       };
 
-      await expect(vehicleService.addVehicle(dto)).rejects.toThrow('Price cannot be negative');
+      await expect(vehicleService.addVehicle(dto)).rejects.toThrow('Price must be greater than 0');
       expect(mockVehicleRepository.create).not.toHaveBeenCalled();
     });
 
@@ -102,25 +254,34 @@ describe('VehicleService', () => {
   });
 
   describe('searchVehicles', () => {
-    it('should return search results based on query', async () => {
-      const query = { make: 'Honda', minPrice: 20000 };
+    it('should return search results based on query and trim query string values', async () => {
+      const query = { make: '  Honda  ', model: '  Civic  ', category: '  Sedan  ', minPrice: 20000 };
       mockVehicleRepository.search.mockResolvedValue([mockVehicle]);
 
       const result = await vehicleService.searchVehicles(query);
 
-      expect(mockVehicleRepository.search).toHaveBeenCalledWith(query);
+      expect(mockVehicleRepository.search).toHaveBeenCalledWith({
+        make: 'Honda',
+        model: 'Civic',
+        category: 'Sedan',
+        minPrice: 20000,
+      });
       expect(result).toEqual([mockVehicle]);
     });
   });
 
   describe('updateVehicle', () => {
-    it('should update vehicle details successfully', async () => {
+    it('should update vehicle details successfully and trim input values', async () => {
       const updateDto = {
-        price: 24000,
         make: '  Honda  ',
+        model: '  Accord  ',
+        category: '  Sedan  ',
+        imageUrl: '  http://example.com/accord.jpg  ',
+        price: 24000,
+        quantity: 0,
       };
 
-      const updatedVehicle = { ...mockVehicle, price: 24000, make: 'Honda' };
+      const updatedVehicle = { ...mockVehicle, price: 24000, quantity: 0, make: 'Honda', model: 'Accord' };
 
       mockVehicleRepository.findById.mockResolvedValue(mockVehicle);
       mockVehicleRepository.update.mockResolvedValue(updatedVehicle);
@@ -130,13 +291,40 @@ describe('VehicleService', () => {
       expect(mockVehicleRepository.findById).toHaveBeenCalledWith('veh-uuid-1');
       expect(mockVehicleRepository.update).toHaveBeenCalledWith('veh-uuid-1', {
         make: 'Honda',
-        model: undefined,
-        category: undefined,
+        model: 'Accord',
+        category: 'Sedan',
         price: 24000,
-        quantity: undefined,
-        imageUrl: undefined,
+        quantity: 0,
+        imageUrl: 'http://example.com/accord.jpg',
       });
       expect(result).toEqual(updatedVehicle);
+    });
+
+    it('should reject empty make during update', async () => {
+      mockVehicleRepository.findById.mockResolvedValue(mockVehicle);
+
+      await expect(
+        vehicleService.updateVehicle('veh-uuid-1', { make: '   ' })
+      ).rejects.toThrow('Make cannot be empty');
+      expect(mockVehicleRepository.update).not.toHaveBeenCalled();
+    });
+
+    it('should reject empty model during update', async () => {
+      mockVehicleRepository.findById.mockResolvedValue(mockVehicle);
+
+      await expect(
+        vehicleService.updateVehicle('veh-uuid-1', { model: '   ' })
+      ).rejects.toThrow('Model cannot be empty');
+      expect(mockVehicleRepository.update).not.toHaveBeenCalled();
+    });
+
+    it('should reject empty category during update', async () => {
+      mockVehicleRepository.findById.mockResolvedValue(mockVehicle);
+
+      await expect(
+        vehicleService.updateVehicle('veh-uuid-1', { category: '   ' })
+      ).rejects.toThrow('Category cannot be empty');
+      expect(mockVehicleRepository.update).not.toHaveBeenCalled();
     });
 
     it('should throw VehicleNotFoundError when vehicle is not found for update', async () => {
@@ -148,12 +336,12 @@ describe('VehicleService', () => {
       expect(mockVehicleRepository.update).not.toHaveBeenCalled();
     });
 
-    it('should throw an error if updated price is negative', async () => {
+    it('should throw an error if updated price is 0 or negative', async () => {
       mockVehicleRepository.findById.mockResolvedValue(mockVehicle);
 
       await expect(
-        vehicleService.updateVehicle('veh-uuid-1', { price: -100 })
-      ).rejects.toThrow('Price cannot be negative');
+        vehicleService.updateVehicle('veh-uuid-1', { price: 0 })
+      ).rejects.toThrow('Price must be greater than 0');
       expect(mockVehicleRepository.update).not.toHaveBeenCalled();
     });
 

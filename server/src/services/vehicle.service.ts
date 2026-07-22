@@ -33,21 +33,38 @@ export class VehicleService implements IVehicleService {
   constructor(private vehicleRepository: IVehicleRepository) {}
 
   async addVehicle(dto: AddVehicleDto): Promise<Vehicle> {
-    if (dto.price < 0) {
-      throw new Error('Price cannot be negative');
+    const trimmedMake = dto.make ? dto.make.trim() : '';
+    if (!trimmedMake) {
+      throw new Error('Make is required and cannot be empty');
+    }
+
+    const trimmedModel = dto.model ? dto.model.trim() : '';
+    if (!trimmedModel) {
+      throw new Error('Model is required and cannot be empty');
+    }
+
+    const trimmedCategory = dto.category ? dto.category.trim() : '';
+    if (!trimmedCategory) {
+      throw new Error('Category is required and cannot be empty');
+    }
+
+    if (dto.price <= 0) {
+      throw new Error('Price must be greater than 0');
     }
 
     if (dto.quantity < 0) {
       throw new Error('Quantity cannot be negative');
     }
 
+    const trimmedImageUrl = dto.imageUrl && dto.imageUrl.trim() !== '' ? dto.imageUrl.trim() : null;
+
     return this.vehicleRepository.create({
-      make: dto.make.trim(),
-      model: dto.model.trim(),
-      category: dto.category.trim(),
+      make: trimmedMake,
+      model: trimmedModel,
+      category: trimmedCategory,
       price: dto.price,
       quantity: dto.quantity,
-      imageUrl: dto.imageUrl ? dto.imageUrl.trim() : null,
+      imageUrl: trimmedImageUrl,
     });
   }
 
@@ -60,7 +77,12 @@ export class VehicleService implements IVehicleService {
   }
 
   async searchVehicles(query: VehicleSearchQuery): Promise<Vehicle[]> {
-    return this.vehicleRepository.search(query);
+    return this.vehicleRepository.search({
+      ...query,
+      make: query.make?.trim(),
+      model: query.model?.trim(),
+      category: query.category?.trim(),
+    });
   }
 
   async updateVehicle(id: string, dto: UpdateVehicleDto): Promise<Vehicle> {
@@ -69,8 +91,26 @@ export class VehicleService implements IVehicleService {
       throw new VehicleNotFoundError();
     }
 
-    if (dto.price !== undefined && dto.price < 0) {
-      throw new Error('Price cannot be negative');
+    if (dto.make !== undefined) {
+      if (!dto.make.trim()) {
+        throw new Error('Make cannot be empty');
+      }
+    }
+
+    if (dto.model !== undefined) {
+      if (!dto.model.trim()) {
+        throw new Error('Model cannot be empty');
+      }
+    }
+
+    if (dto.category !== undefined) {
+      if (!dto.category.trim()) {
+        throw new Error('Category cannot be empty');
+      }
+    }
+
+    if (dto.price !== undefined && dto.price <= 0) {
+      throw new Error('Price must be greater than 0');
     }
 
     if (dto.quantity !== undefined && dto.quantity < 0) {
@@ -83,7 +123,12 @@ export class VehicleService implements IVehicleService {
       category: dto.category !== undefined ? dto.category.trim() : undefined,
       price: dto.price,
       quantity: dto.quantity,
-      imageUrl: dto.imageUrl !== undefined ? (dto.imageUrl ? dto.imageUrl.trim() : null) : undefined,
+      imageUrl:
+        dto.imageUrl !== undefined
+          ? dto.imageUrl && dto.imageUrl.trim() !== ''
+            ? dto.imageUrl.trim()
+            : null
+          : undefined,
     });
   }
 
