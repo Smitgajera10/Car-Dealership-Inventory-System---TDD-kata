@@ -77,4 +77,38 @@ describe('AuthService - register', () => {
     await expect(authService.register(registerDto)).rejects.toThrow('User already exists');
     expect(mockUserRepository.create).not.toHaveBeenCalled();
   });
+
+  it('should normalize email to lowercase and trim whitespace before saving', async () => {
+    const registerDto = {
+      email: '  TestUser@Example.COM  ',
+      password: 'password123',
+      name: '  Test User  ',
+    };
+
+    const mockHashedPassword = 'hashed_password123';
+    jest.spyOn(passwordUtils, 'hashPassword').mockResolvedValue(mockHashedPassword);
+    mockUserRepository.findByEmail.mockResolvedValue(null);
+
+    const createdUser = {
+      id: 'uuid-2',
+      email: 'testuser@example.com',
+      password: mockHashedPassword,
+      name: 'Test User',
+      role: 'USER' as const,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+
+    mockUserRepository.create.mockResolvedValue(createdUser);
+
+    await authService.register(registerDto);
+
+    expect(mockUserRepository.findByEmail).toHaveBeenCalledWith('testuser@example.com');
+    expect(mockUserRepository.create).toHaveBeenCalledWith({
+      email: 'testuser@example.com',
+      password: mockHashedPassword,
+      name: 'Test User',
+      role: 'USER',
+    });
+  });
 });

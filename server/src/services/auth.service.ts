@@ -17,7 +17,9 @@ export class AuthService implements IAuthService {
   constructor(private userRepository: IUserRepository) {}
 
   async register(dto: RegisterUserDto): Promise<User> {
-    const existingUser = await this.userRepository.findByEmail(dto.email);
+    const normalizedEmail = dto.email.trim().toLowerCase();
+
+    const existingUser = await this.userRepository.findByEmail(normalizedEmail);
     if (existingUser) {
       throw new Error('User already exists');
     }
@@ -25,9 +27,9 @@ export class AuthService implements IAuthService {
     const hashedPassword = await hashPassword(dto.password);
 
     return this.userRepository.create({
-      email: dto.email,
+      email: normalizedEmail,
       password: hashedPassword,
-      name: dto.name,
+      name: dto.name?.trim(),
       role: dto.role || 'USER',
     });
   }
