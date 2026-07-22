@@ -1,6 +1,7 @@
 import { VehicleService } from '../../services/vehicle.service';
 import { IVehicleRepository } from '../../repositories/vehicle.repository';
 import { VehicleNotFoundError } from '../../errors/VehicleNotFoundError';
+import { OutOfStockError } from '../../errors/OutOfStockError';
 
 describe('VehicleService', () => {
   let vehicleService: VehicleService;
@@ -372,6 +373,79 @@ describe('VehicleService', () => {
 
       await expect(vehicleService.deleteVehicle('invalid-id')).rejects.toThrow(VehicleNotFoundError);
       expect(mockVehicleRepository.delete).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('purchaseVehicle', () => {
+    it('should decrement vehicle quantity by 1 when stock is available', async () => {
+      const existingVehicle = { ...mockVehicle, quantity: 3 };
+      const purchasedVehicle = { ...mockVehicle, quantity: 2 };
+
+      mockVehicleRepository.findById.mockResolvedValue(existingVehicle);
+      mockVehicleRepository.update.mockResolvedValue(purchasedVehicle);
+
+      const result = await vehicleService.purchaseVehicle('veh-uuid-1');
+
+      expect(mockVehicleRepository.findById).toHaveBeenCalledWith('veh-uuid-1');
+      expect(mockVehicleRepository.update).toHaveBeenCalledWith('veh-uuid-1', {
+        quantity: 2,
+      });
+      expect(result).toEqual(purchasedVehicle);
+    });
+
+    it('should throw OutOfStockError when vehicle quantity is 0', async () => {
+      const outOfStockVehicle = { ...mockVehicle, quantity: 0 };
+      mockVehicleRepository.findById.mockResolvedValue(outOfStockVehicle);
+
+      await expect(vehicleService.purchaseVehicle('veh-uuid-1')).rejects.toThrow(
+        OutOfStockError
+      );
+      expect(mockVehicleRepository.update).not.toHaveBeenCalled();
+    });
+
+    it('should throw VehicleNotFoundError when vehicle is not found for purchase', async () => {
+      mockVehicleRepository.findById.mockResolvedValue(null);
+
+      await expect(vehicleService.purchaseVehicle('invalid-id')).rejects.toThrow(
+        VehicleNotFoundError
+      );
+      expect(mockVehicleRepository.update).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('restockVehicle', () => {
+    it('should increment vehicle quantity by restock amount', async () => {
+      const existingVehicle = { ...mockVehicle, quantity: 2 };
+      const restockedVehicle = { ...mockVehicle, quantity: 7 };
+
+      mockVehicleRepository.findById.mockResolvedValue(existingVehicle);
+      mockVehicleRepository.update.mockResolvedValue(restockedVehicle);
+
+      const result = await vehicleService.restockVehicle('veh-uuid-1', 5);
+
+      expect(mockVehicleRepository.findById).toHaveBeenCalledWith('veh-uuid-1');
+      expect(mockVehicleRepository.update).toHaveBeenCalledWith('veh-uuid-1', {
+        quantity: 7,
+      });
+      expect(result).toEqual(restockedVehicle);
+    });
+
+    it('should throw an error when restock amount is 0 or negative', async () => {
+      mockVehicleRepository.findById.mockResolvedValue(mockVehicle);
+
+      await expect(vehicleService.restockVehicle('veh-uuid-1', 0)).rejects.toThrow(
+        'Restock amount must be greater than 0'
+      );
+      expect(mockVehicleRepository.update).not.toHaveBeenCalled();
+    });
+
+    it('should throw VehicleNotFoundError when vehicle is not found for restock', async () => {
+      mockVehicleRepository.findById.mockResolvedValue(null);
+
+      await expect(vehicleService.restockVehicle('invalid-id', 5)).rejects.toThrow(
+        VehicleNotFoundError
+      );
+      expect(mockVehicleRepository.update).not.toHaveBeenCalled();
     });
   });
 });
