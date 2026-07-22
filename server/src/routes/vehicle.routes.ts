@@ -35,4 +35,17 @@ router.delete(
   asyncHandler(vehicleController.delete.bind(vehicleController))
 );
 
+router.post(
+  '/:id/purchase',
+  authenticateToken,
+  asyncHandler(vehicleController.purchase.bind(vehicleController))
+);
+
+router.post(
+  '/:id/restock',
+  authenticateToken,
+  requireAdmin,
+  asyncHandler(vehicleController.restock.bind(vehicleController))
+);
+
 export default router;

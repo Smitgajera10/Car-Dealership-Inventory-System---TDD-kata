@@ -92,4 +92,34 @@ export class VehicleController {
       data: vehicle,
     });
   }
+
+  async purchase(req: Request, res: Response): Promise<Response> {
+    const { id } = req.params;
+
+    const vehicle = await this.vehicleService.purchaseVehicle(id);
+
+    return res.status(200).json({
+      success: true,
+      data: vehicle,
+    });
+  }
+
+  async restock(req: Request, res: Response): Promise<Response> {
+    const { id } = req.params;
+    const { amount } = req.body;
+
+    if (amount === undefined || Number(amount) <= 0) {
+      return res.status(400).json({
+        success: false,
+        message: 'Restock amount must be greater than 0',
+      });
+    }
+
+    const vehicle = await this.vehicleService.restockVehicle(id, Number(amount));
+
+    return res.status(200).json({
+      success: true,
+      data: vehicle,
+    });
+  }
 }
