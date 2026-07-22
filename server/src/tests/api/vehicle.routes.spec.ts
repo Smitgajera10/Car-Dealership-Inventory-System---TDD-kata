@@ -3,6 +3,7 @@ import { app } from '../../app';
 import { VehicleService } from '../../services/vehicle.service';
 import { generateToken } from '../../utils/jwt';
 import { VehicleNotFoundError } from '../../errors/VehicleNotFoundError';
+import { OutOfStockError } from '../../errors/OutOfStockError';
 import { Vehicle } from '../../generated/prisma/client';
 
 describe('Vehicle API Endpoints (/api/vehicles)', () => {
@@ -228,6 +229,99 @@ describe('Vehicle API Endpoints (/api/vehicles)', () => {
         success: false,
         message: 'Vehicle not found',
       });
+    });
+  });
+
+  describe('POST /api/vehicles/:id/purchase', () => {
+    it('should purchase vehicle and return updated quantity when authenticated', async () => {
+      const purchasedVehicle = { ...mockVehicle, quantity: 9 };
+      const serializedPurchased = {
+        ...purchasedVehicle,
+        createdAt: purchasedVehicle.createdAt.toISOString(),
+        updatedAt: purchasedVehicle.updatedAt.toISOString(),
+      };
+
+      jest
+        .spyOn(VehicleService.prototype, 'purchaseVehicle')
+        .mockResolvedValue(purchasedVehicle);
+
+      const response = await request(app)
+        .post('/api/vehicles/veh-uuid-100/purchase')
+        .set('Authorization', `Bearer ${userToken}`);
+
+      expect(response.status).toBe(200);
+      expect(response.body).toEqual({
+        success: true,
+        data: serializedPurchased,
+      });
+    });
+
+    it('should return 400 Bad Request when vehicle is out of stock', async () => {
+      jest
+        .spyOn(VehicleService.prototype, 'purchaseVehicle')
+        .mockRejectedValue(new OutOfStockError());
+
+      const response = await request(app)
+        .post('/api/vehicles/veh-uuid-100/purchase')
+        .set('Authorization', `Bearer ${userToken}`);
+
+      expect(response.status).toBe(400);
+      expect(response.body).toEqual({
+        success: false,
+        message: 'Vehicle is out of stock',
+      });
+    });
+
+    it('should return 401 Unauthorized when auth token is missing', async () => {
+      const response = await request(app).post('/api/vehicles/veh-uuid-100/purchase');
+
+      expect(response.status).toBe(401);
+      expect(response.body.success).toBe(false);
+    });
+  });
+
+  describe('POST /api/vehicles/:id/restock', () => {
+    it('should restock vehicle when user has ADMIN role', async () => {
+      const restockedVehicle = { ...mockVehicle, quantity: 15 };
+      const serializedRestocked = {
+        ...restockedVehicle,
+        createdAt: restockedVehicle.createdAt.toISOString(),
+        updatedAt: restockedVehicle.updatedAt.toISOString(),
+      };
+
+      jest
+        .spyOn(VehicleService.prototype, 'restockVehicle')
+        .mockResolvedValue(restockedVehicle);
+
+      const response = await request(app)
+        .post('/api/vehicles/veh-uuid-100/restock')
+        .set('Authorization', `Bearer ${adminToken}`)
+        .send({ amount: 5 });
+
+      expect(response.status).toBe(200);
+      expect(response.body).toEqual({
+        success: true,
+        data: serializedRestocked,
+      });
+    });
+
+    it('should return 403 Forbidden when non-admin user attempts restock', async () => {
+      const response = await request(app)
+        .post('/api/vehicles/veh-uuid-100/restock')
+        .set('Authorization', `Bearer ${userToken}`)
+        .send({ amount: 5 });
+
+      expect(response.status).toBe(403);
+      expect(response.body.success).toBe(false);
+    });
+
+    it('should return 401 Unauthorized when auth token is missing', async () => {
+      const response = await request(app)
+        .post('/api/vehicles/veh-uuid-100/restock')
+        .send({ amount: 5 });
+
+      expect(response.status).toBe(401);
+      expect(response.body.success).toBe(false);
     });
   });
 });
