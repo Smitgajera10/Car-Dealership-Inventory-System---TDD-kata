@@ -2,6 +2,8 @@ import { IUserRepository } from '../repositories/user.repository';
 import { User, Role } from '../generated/prisma/client';
 import { hashPassword, comparePassword } from '../utils/password';
 import { generateToken } from '../utils/jwt';
+import { UserAlreadyExistsError } from '../errors/UserAlreadyExistsError';
+import { InvalidCredentialsError } from '../errors/InvalidCredentialsError';
 
 export interface RegisterUserDto {
   email: string;
@@ -33,7 +35,7 @@ export class AuthService implements IAuthService {
 
     const existingUser = await this.userRepository.findByEmail(normalizedEmail);
     if (existingUser) {
-      throw new Error('User already exists');
+      throw new UserAlreadyExistsError();;
     }
 
     const hashedPassword = await hashPassword(dto.password);
@@ -51,12 +53,12 @@ export class AuthService implements IAuthService {
 
     const user = await this.userRepository.findByEmail(normalizedEmail);
     if (!user) {
-      throw new Error('Invalid email or password');
+      throw new InvalidCredentialsError();
     }
 
     const isPasswordValid = await comparePassword(dto.password, user.password);
     if (!isPasswordValid) {
-      throw new Error('Invalid email or password');
+      throw new InvalidCredentialsError();
     }
 
     const token = generateToken({

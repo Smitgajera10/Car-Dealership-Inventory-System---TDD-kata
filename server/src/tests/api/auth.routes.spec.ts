@@ -2,6 +2,8 @@ import request from 'supertest';
 import { app } from '../../app';
 import { AuthService, AuthResponse } from '../../services/auth.service';
 import { User } from '../../generated/prisma/client';
+import { UserAlreadyExistsError } from '../../errors/UserAlreadyExistsError';
+import { InvalidCredentialsError } from '../../errors/InvalidCredentialsError';
 
 describe('Auth API Endpoints (/api/auth)', () => {
   beforeEach(() => {
@@ -33,8 +35,8 @@ describe('Auth API Endpoints (/api/auth)', () => {
 
       expect(response.status).toBe(201);
       expect(response.body).toEqual({
-        message: 'User registered successfully',
-        user: mockCreatedUser,
+        success: true,
+        data: mockCreatedUser,
       });
     });
 
@@ -46,11 +48,14 @@ describe('Auth API Endpoints (/api/auth)', () => {
         });
 
       expect(response.status).toBe(400);
-      expect(response.body.error).toBeDefined();
+      expect(response.body).toEqual({
+        success: false,
+        message: "Email and password are required",
+      });
     });
 
-    it('should return 400 Bad Request when email already exists', async () => {
-      jest.spyOn(AuthService.prototype, 'register').mockRejectedValue(new Error('User already exists'));
+    it('should return 409 Conflict when email already exists', async () => {
+      jest.spyOn(AuthService.prototype, 'register').mockRejectedValue(new UserAlreadyExistsError());
 
       const response = await request(app)
         .post('/api/auth/register')
@@ -59,8 +64,11 @@ describe('Auth API Endpoints (/api/auth)', () => {
           password: 'password123',
         });
 
-      expect(response.status).toBe(400);
-      expect(response.body.error).toBe('User already exists');
+      expect(response.status).toBe(409);
+      expect(response.body).toEqual({
+        success: false,
+        message: "User already exists",
+      });
     });
   });
 
@@ -91,8 +99,8 @@ describe('Auth API Endpoints (/api/auth)', () => {
 
       expect(response.status).toBe(200);
       expect(response.body).toEqual({
-        message: 'Login successful',
-        ...mockAuthResponse,
+        success: true,
+        data: mockAuthResponse,
       });
     });
 
@@ -104,11 +112,14 @@ describe('Auth API Endpoints (/api/auth)', () => {
         });
 
       expect(response.status).toBe(400);
-      expect(response.body.error).toBeDefined();
+      expect(response.body).toEqual({
+        success: false,
+        message: "Email and password are required",
+      });
     });
 
     it('should return 401 Unauthorized when credentials are invalid', async () => {
-      jest.spyOn(AuthService.prototype, 'login').mockRejectedValue(new Error('Invalid email or password'));
+      jest.spyOn(AuthService.prototype, 'login').mockRejectedValue(new InvalidCredentialsError());
 
       const response = await request(app)
         .post('/api/auth/login')
@@ -118,7 +129,12 @@ describe('Auth API Endpoints (/api/auth)', () => {
         });
 
       expect(response.status).toBe(401);
-      expect(response.body.error).toBe('Invalid email or password');
+      expect(response.body).toEqual(
+        {
+          success: false,
+          message: "Invalid email or password",
+        }
+      );
     });
   });
 });

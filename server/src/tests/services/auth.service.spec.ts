@@ -2,6 +2,8 @@ import { AuthService } from '../../services/auth.service';
 import { IUserRepository } from '../../repositories/user.repository';
 import * as passwordUtils from '../../utils/password';
 import * as jwtUtils from '../../utils/jwt';
+import { UserAlreadyExistsError } from '../../errors/UserAlreadyExistsError';
+import { InvalidCredentialsError } from '../../errors/InvalidCredentialsError';
 
 describe('AuthService', () => {
   let authService: AuthService;
@@ -76,7 +78,7 @@ describe('AuthService', () => {
 
       mockUserRepository.findByEmail.mockResolvedValue(existingUser);
 
-      await expect(authService.register(registerDto)).rejects.toThrow('User already exists');
+      await expect(authService.register(registerDto)).rejects.toThrow(UserAlreadyExistsError);
       expect(mockUserRepository.create).not.toHaveBeenCalled();
     });
 
@@ -159,7 +161,7 @@ describe('AuthService', () => {
 
       mockUserRepository.findByEmail.mockResolvedValue(null);
 
-      await expect(authService.login(loginDto)).rejects.toThrow('Invalid email or password');
+      await expect(authService.login(loginDto)).rejects.toThrow(InvalidCredentialsError);
     });
 
     it('should throw an error when password verification fails', async () => {
@@ -181,7 +183,7 @@ describe('AuthService', () => {
       mockUserRepository.findByEmail.mockResolvedValue(existingUser);
       jest.spyOn(passwordUtils, 'comparePassword').mockResolvedValue(false);
 
-      await expect(authService.login(loginDto)).rejects.toThrow('Invalid email or password');
+      await expect(authService.login(loginDto)).rejects.toThrow(InvalidCredentialsError);
     });
   });
 });
