@@ -3,7 +3,6 @@ import cors from 'cors';
 import authRouter from './routes/auth.routes';
 import vehicleRouter from './routes/vehicle.routes';
 import { errorMiddleware } from './middleware/error.middleware';
-
 export const app = express();
 
 app.use(cors());
