@@ -1,6 +1,7 @@
 import { IVehicleRepository, VehicleSearchQuery } from '../repositories/vehicle.repository';
 import { Vehicle } from '../generated/prisma/client';
 import { VehicleNotFoundError } from '../errors/VehicleNotFoundError';
+import { OutOfStockError } from '../errors/OutOfStockError';
 
 export interface AddVehicleDto {
   make: string;
@@ -27,6 +28,8 @@ export interface IVehicleService {
   searchVehicles(query: VehicleSearchQuery): Promise<Vehicle[]>;
   updateVehicle(id: string, dto: UpdateVehicleDto): Promise<Vehicle>;
   deleteVehicle(id: string): Promise<Vehicle>;
+  purchaseVehicle(id: string): Promise<Vehicle>;
+  restockVehicle(id: string, amount: number): Promise<Vehicle>;
 }
 
 export class VehicleService implements IVehicleService {
@@ -139,5 +142,35 @@ export class VehicleService implements IVehicleService {
     }
 
     return this.vehicleRepository.delete(id);
+  }
+
+  async purchaseVehicle(id: string): Promise<Vehicle> {
+    const existingVehicle = await this.vehicleRepository.findById(id);
+    if (!existingVehicle) {
+      throw new VehicleNotFoundError();
+    }
+
+    if (existingVehicle.quantity <= 0) {
+      throw new OutOfStockError();
+    }
+
+    return this.vehicleRepository.update(id, {
+      quantity: existingVehicle.quantity - 1,
+    });
+  }
+
+  async restockVehicle(id: string, amount: number): Promise<Vehicle> {
+    if (amount <= 0) {
+      throw new Error('Restock amount must be greater than 0');
+    }
+
+    const existingVehicle = await this.vehicleRepository.findById(id);
+    if (!existingVehicle) {
+      throw new VehicleNotFoundError();
+    }
+
+    return this.vehicleRepository.update(id, {
+      quantity: existingVehicle.quantity + amount,
+    });
   }
 }
