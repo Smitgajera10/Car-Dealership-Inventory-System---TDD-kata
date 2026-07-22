@@ -42,14 +42,14 @@ describe('Vehicle API Endpoints (/api/vehicles)', () => {
   });
 
   describe('POST /api/vehicles', () => {
-    it('should create a vehicle when authenticated and data is valid', async () => {
+    it('should create a vehicle when user has ADMIN role and data is valid', async () => {
       jest
         .spyOn(VehicleService.prototype, 'addVehicle')
         .mockResolvedValue(mockVehicle);
 
       const response = await request(app)
         .post('/api/vehicles')
-        .set('Authorization', `Bearer ${userToken}`)
+        .set('Authorization', `Bearer ${adminToken}`)
         .send({
           make: 'Toyota',
           model: 'Corolla',
@@ -66,10 +66,26 @@ describe('Vehicle API Endpoints (/api/vehicles)', () => {
       });
     });
 
-    it('should return 400 Bad Request when non-numeric string price ("abc") is provided', async () => {
+    it('should return 403 Forbidden when non-admin user attempts vehicle creation', async () => {
       const response = await request(app)
         .post('/api/vehicles')
         .set('Authorization', `Bearer ${userToken}`)
+        .send({
+          make: 'Toyota',
+          model: 'Corolla',
+          category: 'Sedan',
+          price: 20000,
+          quantity: 10,
+        });
+
+      expect(response.status).toBe(403);
+      expect(response.body.success).toBe(false);
+    });
+
+    it('should return 400 Bad Request when non-numeric string price ("abc") is provided', async () => {
+      const response = await request(app)
+        .post('/api/vehicles')
+        .set('Authorization', `Bearer ${adminToken}`)
         .send({
           make: 'Toyota',
           model: 'Corolla',
@@ -166,7 +182,7 @@ describe('Vehicle API Endpoints (/api/vehicles)', () => {
   });
 
   describe('PUT /api/vehicles/:id', () => {
-    it('should update vehicle when authenticated user sends update payload', async () => {
+    it('should update vehicle when user has ADMIN role', async () => {
       const updatedVehicle = { ...mockVehicle, price: 21000 };
       const serializedUpdated = {
         ...updatedVehicle,
@@ -180,7 +196,7 @@ describe('Vehicle API Endpoints (/api/vehicles)', () => {
 
       const response = await request(app)
         .put('/api/vehicles/veh-uuid-100')
-        .set('Authorization', `Bearer ${userToken}`)
+        .set('Authorization', `Bearer ${adminToken}`)
         .send({ price: 21000 });
 
       expect(response.status).toBe(200);
@@ -190,14 +206,24 @@ describe('Vehicle API Endpoints (/api/vehicles)', () => {
       });
     });
 
-    it('should return 404 Not Found when updating non-existent vehicle', async () => {
+    it('should return 403 Forbidden when non-admin user attempts vehicle update', async () => {
+      const response = await request(app)
+        .put('/api/vehicles/veh-uuid-100')
+        .set('Authorization', `Bearer ${userToken}`)
+        .send({ price: 21000 });
+
+      expect(response.status).toBe(403);
+      expect(response.body.success).toBe(false);
+    });
+
+    it('should return 404 Not Found when updating non-existent vehicle as admin', async () => {
       jest
         .spyOn(VehicleService.prototype, 'updateVehicle')
         .mockRejectedValue(new VehicleNotFoundError());
 
       const response = await request(app)
         .put('/api/vehicles/non-existent-id')
-        .set('Authorization', `Bearer ${userToken}`)
+        .set('Authorization', `Bearer ${adminToken}`)
         .send({ price: 21000 });
 
       expect(response.status).toBe(404);

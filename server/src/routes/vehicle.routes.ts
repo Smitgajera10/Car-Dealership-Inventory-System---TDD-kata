@@ -19,12 +19,14 @@ router.get('/:id', asyncHandler(vehicleController.getById.bind(vehicleController
 router.post(
   '/',
   authenticateToken,
+  requireAdmin,
   asyncHandler(vehicleController.create.bind(vehicleController))
 );
 
 router.put(
   '/:id',
   authenticateToken,
+  requireAdmin,
   asyncHandler(vehicleController.update.bind(vehicleController))
 );
 
