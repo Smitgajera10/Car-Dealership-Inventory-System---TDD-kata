@@ -35,7 +35,7 @@ export class AuthService implements IAuthService {
 
     const existingUser = await this.userRepository.findByEmail(normalizedEmail);
     if (existingUser) {
-      throw new UserAlreadyExistsError();;
+      throw new UserAlreadyExistsError();
     }
 
     const hashedPassword = await hashPassword(dto.password);
