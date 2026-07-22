@@ -1,6 +1,7 @@
 import { IUserRepository } from '../repositories/user.repository';
 import { User, Role } from '../generated/prisma/client';
-import { hashPassword } from '../utils/password';
+import { hashPassword, comparePassword } from '../utils/password';
+import { generateToken } from '../utils/jwt';
 
 export interface RegisterUserDto {
   email: string;
@@ -9,8 +10,19 @@ export interface RegisterUserDto {
   role?: Role;
 }
 
+export interface LoginUserDto {
+  email: string;
+  password: string;
+}
+
+export interface AuthResponse {
+  user: User;
+  token: string;
+}
+
 export interface IAuthService {
   register(dto: RegisterUserDto): Promise<User>;
+  login(dto: LoginUserDto): Promise<AuthResponse>;
 }
 
 export class AuthService implements IAuthService {
@@ -32,5 +44,30 @@ export class AuthService implements IAuthService {
       name: dto.name?.trim(),
       role: dto.role || 'USER',
     });
+  }
+
+  async login(dto: LoginUserDto): Promise<AuthResponse> {
+    const normalizedEmail = dto.email.trim().toLowerCase();
+
+    const user = await this.userRepository.findByEmail(normalizedEmail);
+    if (!user) {
+      throw new Error('Invalid email or password');
+    }
+
+    const isPasswordValid = await comparePassword(dto.password, user.password);
+    if (!isPasswordValid) {
+      throw new Error('Invalid email or password');
+    }
+
+    const token = generateToken({
+      id: user.id,
+      email: user.email,
+      role: user.role,
+    });
+
+    return {
+      user,
+      token,
+    };
   }
 }
