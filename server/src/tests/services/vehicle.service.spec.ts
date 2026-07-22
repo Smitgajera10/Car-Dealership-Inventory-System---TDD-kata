@@ -218,6 +218,19 @@ describe('VehicleService', () => {
       expect(mockVehicleRepository.create).not.toHaveBeenCalled();
     });
 
+    it('should throw an error if price is NaN', async () => {
+      const dto = {
+        make: 'Honda',
+        model: 'Civic',
+        category: 'Sedan',
+        price: NaN,
+        quantity: 3,
+      };
+
+      await expect(vehicleService.addVehicle(dto)).rejects.toThrow('Price must be greater than 0');
+      expect(mockVehicleRepository.create).not.toHaveBeenCalled();
+    });
+
     it('should throw an error if quantity is negative', async () => {
       const dto = {
         make: 'Honda',
@@ -430,10 +443,19 @@ describe('VehicleService', () => {
       expect(result).toEqual(restockedVehicle);
     });
 
-    it('should throw an error when restock amount is 0 or negative', async () => {
+    it('should throw an error when restock amount is 0', async () => {
       mockVehicleRepository.findById.mockResolvedValue(mockVehicle);
 
       await expect(vehicleService.restockVehicle('veh-uuid-1', 0)).rejects.toThrow(
+        'Restock amount must be greater than 0'
+      );
+      expect(mockVehicleRepository.update).not.toHaveBeenCalled();
+    });
+
+    it('should throw an error when restock amount is negative (e.g. -5)', async () => {
+      mockVehicleRepository.findById.mockResolvedValue(mockVehicle);
+
+      await expect(vehicleService.restockVehicle('veh-uuid-1', -5)).rejects.toThrow(
         'Restock amount must be greater than 0'
       );
       expect(mockVehicleRepository.update).not.toHaveBeenCalled();

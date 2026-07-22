@@ -51,11 +51,11 @@ export class VehicleService implements IVehicleService {
       throw new Error('Category is required and cannot be empty');
     }
 
-    if (dto.price <= 0) {
+    if (typeof dto.price !== 'number' || Number.isNaN(dto.price) || dto.price <= 0) {
       throw new Error('Price must be greater than 0');
     }
 
-    if (dto.quantity < 0) {
+    if (typeof dto.quantity !== 'number' || Number.isNaN(dto.quantity) || dto.quantity < 0) {
       throw new Error('Quantity cannot be negative');
     }
 
@@ -112,11 +112,17 @@ export class VehicleService implements IVehicleService {
       }
     }
 
-    if (dto.price !== undefined && dto.price <= 0) {
+    if (
+      dto.price !== undefined &&
+      (typeof dto.price !== 'number' || Number.isNaN(dto.price) || dto.price <= 0)
+    ) {
       throw new Error('Price must be greater than 0');
     }
 
-    if (dto.quantity !== undefined && dto.quantity < 0) {
+    if (
+      dto.quantity !== undefined &&
+      (typeof dto.quantity !== 'number' || Number.isNaN(dto.quantity) || dto.quantity < 0)
+    ) {
       throw new Error('Quantity cannot be negative');
     }
 
@@ -160,7 +166,7 @@ export class VehicleService implements IVehicleService {
   }
 
   async restockVehicle(id: string, amount: number): Promise<Vehicle> {
-    if (amount <= 0) {
+    if (typeof amount !== 'number' || Number.isNaN(amount) || amount <= 0) {
       throw new Error('Restock amount must be greater than 0');
     }
 

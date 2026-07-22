@@ -8,12 +8,29 @@ export class VehicleController {
   async create(req: Request, res: Response): Promise<Response> {
     const { make, model, category, price, quantity, imageUrl } = req.body;
 
+    const numPrice = Number(price);
+    const numQuantity = Number(quantity);
+
+    if (price === undefined || Number.isNaN(numPrice)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Price must be a valid number',
+      });
+    }
+
+    if (quantity === undefined || Number.isNaN(numQuantity)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Quantity must be a valid number',
+      });
+    }
+
     const vehicle = await this.vehicleService.addVehicle({
       make,
       model,
       category,
-      price: Number(price),
-      quantity: Number(quantity),
+      price: numPrice,
+      quantity: numQuantity,
       imageUrl,
     });
 
@@ -35,12 +52,29 @@ export class VehicleController {
   async search(req: Request, res: Response): Promise<Response> {
     const { make, model, category, minPrice, maxPrice } = req.query;
 
+    const parsedMinPrice = minPrice !== undefined ? Number(minPrice) : undefined;
+    const parsedMaxPrice = maxPrice !== undefined ? Number(maxPrice) : undefined;
+
+    if (parsedMinPrice !== undefined && Number.isNaN(parsedMinPrice)) {
+      return res.status(400).json({
+        success: false,
+        message: 'minPrice must be a valid number',
+      });
+    }
+
+    if (parsedMaxPrice !== undefined && Number.isNaN(parsedMaxPrice)) {
+      return res.status(400).json({
+        success: false,
+        message: 'maxPrice must be a valid number',
+      });
+    }
+
     const vehicles = await this.vehicleService.searchVehicles({
       make: make ? String(make) : undefined,
       model: model ? String(model) : undefined,
       category: category ? String(category) : undefined,
-      minPrice: minPrice !== undefined ? Number(minPrice) : undefined,
-      maxPrice: maxPrice !== undefined ? Number(maxPrice) : undefined,
+      minPrice: parsedMinPrice,
+      maxPrice: parsedMaxPrice,
     });
 
     return res.status(200).json({
@@ -67,12 +101,29 @@ export class VehicleController {
     const { id } = req.params;
     const { make, model, category, price, quantity, imageUrl } = req.body;
 
+    const parsedPrice = price !== undefined ? Number(price) : undefined;
+    const parsedQuantity = quantity !== undefined ? Number(quantity) : undefined;
+
+    if (parsedPrice !== undefined && Number.isNaN(parsedPrice)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Price must be a valid number',
+      });
+    }
+
+    if (parsedQuantity !== undefined && Number.isNaN(parsedQuantity)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Quantity must be a valid number',
+      });
+    }
+
     const vehicle = await this.vehicleService.updateVehicle(id, {
       make,
       model,
       category,
-      price: price !== undefined ? Number(price) : undefined,
-      quantity: quantity !== undefined ? Number(quantity) : undefined,
+      price: parsedPrice,
+      quantity: parsedQuantity,
       imageUrl,
     });
 
@@ -108,14 +159,16 @@ export class VehicleController {
     const { id } = req.params;
     const { amount } = req.body;
 
-    if (amount === undefined || Number(amount) <= 0) {
+    const numAmount = Number(amount);
+
+    if (amount === undefined || Number.isNaN(numAmount) || numAmount <= 0) {
       return res.status(400).json({
         success: false,
         message: 'Restock amount must be greater than 0',
       });
     }
 
-    const vehicle = await this.vehicleService.restockVehicle(id, Number(amount));
+    const vehicle = await this.vehicleService.restockVehicle(id, numAmount);
 
     return res.status(200).json({
       success: true,

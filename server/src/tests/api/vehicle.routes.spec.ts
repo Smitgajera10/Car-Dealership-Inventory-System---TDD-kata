@@ -66,6 +66,25 @@ describe('Vehicle API Endpoints (/api/vehicles)', () => {
       });
     });
 
+    it('should return 400 Bad Request when non-numeric string price ("abc") is provided', async () => {
+      const response = await request(app)
+        .post('/api/vehicles')
+        .set('Authorization', `Bearer ${userToken}`)
+        .send({
+          make: 'Toyota',
+          model: 'Corolla',
+          category: 'Sedan',
+          price: 'abc',
+          quantity: 10,
+        });
+
+      expect(response.status).toBe(400);
+      expect(response.body).toEqual({
+        success: false,
+        message: 'Price must be a valid number',
+      });
+    });
+
     it('should return 401 Unauthorized when authorization token is missing', async () => {
       const response = await request(app)
         .post('/api/vehicles')
