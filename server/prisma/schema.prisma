@@ -26,6 +26,8 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  purchases Purchase[]
+
   @@map("users")
 }
 
@@ -40,5 +42,20 @@ model Vehicle {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  purchases Purchase[]
+
   @@map("vehicles")
+}
+
+model Purchase {
+  id            String   @id @default(uuid())
+  userId        String
+  vehicleId     String
+  purchasePrice Float
+  createdAt     DateTime @default(now())
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Restrict)
+  vehicle Vehicle @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+
+  @@map("purchases")
 }
