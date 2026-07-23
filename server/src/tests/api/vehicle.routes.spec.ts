@@ -278,27 +278,29 @@ describe('Vehicle API Endpoints (/api/vehicles)', () => {
   });
 
   describe('POST /api/vehicles/:id/purchase', () => {
-    it('should purchase vehicle and return updated quantity when authenticated', async () => {
+    it('should purchase vehicle and return vehicle + purchase record when authenticated', async () => {
       const purchasedVehicle = { ...mockVehicle, quantity: 9 };
-      const serializedPurchased = {
-        ...purchasedVehicle,
-        createdAt: purchasedVehicle.createdAt.toISOString(),
-        updatedAt: purchasedVehicle.updatedAt.toISOString(),
+      const mockPurchaseRecord = {
+        id: 'purchase-uuid-1',
+        userId: 'user-uuid-123',
+        vehicleId: 'veh-uuid-100',
+        purchasePrice: 20000,
+        createdAt: new Date(),
       };
 
       jest
         .spyOn(VehicleService.prototype, 'purchaseVehicle')
-        .mockResolvedValue(purchasedVehicle);
+        .mockResolvedValue({ vehicle: purchasedVehicle, purchase: mockPurchaseRecord });
 
       const response = await request(app)
         .post('/api/vehicles/veh-uuid-100/purchase')
         .set('Authorization', `Bearer ${userToken}`);
 
       expect(response.status).toBe(200);
-      expect(response.body).toEqual({
-        success: true,
-        data: serializedPurchased,
-      });
+      expect(response.body.success).toBe(true);
+      expect(response.body.data.vehicle.quantity).toBe(9);
+      expect(response.body.data.purchase.purchasePrice).toBe(20000);
+      expect(response.body.data.purchase.userId).toBe('user-uuid-123');
     });
 
     it('should return 400 Bad Request when vehicle is out of stock', async () => {
