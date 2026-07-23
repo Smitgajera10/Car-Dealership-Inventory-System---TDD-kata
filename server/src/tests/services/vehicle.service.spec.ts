@@ -1,11 +1,13 @@
 import { VehicleService } from '../../services/vehicle.service';
 import { IVehicleRepository } from '../../repositories/vehicle.repository';
+import { IPurchaseRepository } from '../../repositories/purchase.repository';
 import { VehicleNotFoundError } from '../../errors/VehicleNotFoundError';
 import { OutOfStockError } from '../../errors/OutOfStockError';
 
 describe('VehicleService', () => {
   let vehicleService: VehicleService;
   let mockVehicleRepository: jest.Mocked<IVehicleRepository>;
+  let mockPurchaseRepository: jest.Mocked<IPurchaseRepository>;
 
   const mockVehicle = {
     id: 'veh-uuid-1',
@@ -31,7 +33,13 @@ describe('VehicleService', () => {
       delete: jest.fn(),
     };
 
-    vehicleService = new VehicleService(mockVehicleRepository);
+    mockPurchaseRepository = {
+      create: jest.fn(),
+      findByUserId: jest.fn(),
+      findAll: jest.fn(),
+    };
+
+    vehicleService = new VehicleService(mockVehicleRepository, mockPurchaseRepository);
   });
 
   describe('addVehicle', () => {
@@ -390,39 +398,78 @@ describe('VehicleService', () => {
   });
 
   describe('purchaseVehicle', () => {
-    it('should decrement vehicle quantity by 1 when stock is available', async () => {
+    const mockUserId = 'user-uuid-buyer';
+
+    const mockPurchaseRecord = {
+      id: 'purchase-uuid-1',
+      userId: mockUserId,
+      vehicleId: 'veh-uuid-1',
+      purchasePrice: 22000,
+      createdAt: new Date(),
+    };
+
+    it('should decrement vehicle quantity by 1 and create a purchase record', async () => {
       const existingVehicle = { ...mockVehicle, quantity: 3 };
       const purchasedVehicle = { ...mockVehicle, quantity: 2 };
 
       mockVehicleRepository.findById.mockResolvedValue(existingVehicle);
       mockVehicleRepository.update.mockResolvedValue(purchasedVehicle);
+      mockPurchaseRepository.create.mockResolvedValue(mockPurchaseRecord);
 
-      const result = await vehicleService.purchaseVehicle('veh-uuid-1');
+      const result = await vehicleService.purchaseVehicle('veh-uuid-1', mockUserId);
 
       expect(mockVehicleRepository.findById).toHaveBeenCalledWith('veh-uuid-1');
       expect(mockVehicleRepository.update).toHaveBeenCalledWith('veh-uuid-1', {
         quantity: 2,
       });
-      expect(result).toEqual(purchasedVehicle);
+      expect(mockPurchaseRepository.create).toHaveBeenCalledWith({
+        userId: mockUserId,
+        vehicleId: 'veh-uuid-1',
+        purchasePrice: 22000,
+      });
+      expect(result.vehicle).toEqual(purchasedVehicle);
+      expect(result.purchase).toEqual(mockPurchaseRecord);
+    });
+
+    it('should snapshot the vehicle price at time of purchase', async () => {
+      const expensiveVehicle = { ...mockVehicle, price: 95000, quantity: 1 };
+      const purchasedExpensive = { ...expensiveVehicle, quantity: 0 };
+
+      mockVehicleRepository.findById.mockResolvedValue(expensiveVehicle);
+      mockVehicleRepository.update.mockResolvedValue(purchasedExpensive);
+      mockPurchaseRepository.create.mockResolvedValue({
+        ...mockPurchaseRecord,
+        purchasePrice: 95000,
+      });
+
+      await vehicleService.purchaseVehicle('veh-uuid-1', mockUserId);
+
+      expect(mockPurchaseRepository.create).toHaveBeenCalledWith({
+        userId: mockUserId,
+        vehicleId: 'veh-uuid-1',
+        purchasePrice: 95000,
+      });
     });
 
     it('should throw OutOfStockError when vehicle quantity is 0', async () => {
       const outOfStockVehicle = { ...mockVehicle, quantity: 0 };
       mockVehicleRepository.findById.mockResolvedValue(outOfStockVehicle);
 
-      await expect(vehicleService.purchaseVehicle('veh-uuid-1')).rejects.toThrow(
+      await expect(vehicleService.purchaseVehicle('veh-uuid-1', mockUserId)).rejects.toThrow(
         OutOfStockError
       );
       expect(mockVehicleRepository.update).not.toHaveBeenCalled();
+      expect(mockPurchaseRepository.create).not.toHaveBeenCalled();
     });
 
     it('should throw VehicleNotFoundError when vehicle is not found for purchase', async () => {
       mockVehicleRepository.findById.mockResolvedValue(null);
 
-      await expect(vehicleService.purchaseVehicle('invalid-id')).rejects.toThrow(
+      await expect(vehicleService.purchaseVehicle('invalid-id', mockUserId)).rejects.toThrow(
         VehicleNotFoundError
       );
       expect(mockVehicleRepository.update).not.toHaveBeenCalled();
+      expect(mockPurchaseRepository.create).not.toHaveBeenCalled();
     });
   });
 
