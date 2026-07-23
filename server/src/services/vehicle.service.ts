@@ -1,5 +1,6 @@
 import { IVehicleRepository, VehicleSearchQuery } from '../repositories/vehicle.repository';
-import { Vehicle } from '../generated/prisma/client';
+import { Vehicle, Purchase } from '../generated/prisma/client';
+import { IPurchaseRepository } from '../repositories/purchase.repository';
 import { VehicleNotFoundError } from '../errors/VehicleNotFoundError';
 import { OutOfStockError } from '../errors/OutOfStockError';
 
@@ -21,6 +22,11 @@ export interface UpdateVehicleDto {
   imageUrl?: string | null;
 }
 
+export interface PurchaseResult {
+  vehicle: Vehicle;
+  purchase: Purchase;
+}
+
 export interface IVehicleService {
   addVehicle(dto: AddVehicleDto): Promise<Vehicle>;
   getAllVehicles(): Promise<Vehicle[]>;
@@ -28,12 +34,15 @@ export interface IVehicleService {
   searchVehicles(query: VehicleSearchQuery): Promise<Vehicle[]>;
   updateVehicle(id: string, dto: UpdateVehicleDto): Promise<Vehicle>;
   deleteVehicle(id: string): Promise<Vehicle>;
-  purchaseVehicle(id: string): Promise<Vehicle>;
+  purchaseVehicle(vehicleId: string, userId: string): Promise<PurchaseResult>;
   restockVehicle(id: string, amount: number): Promise<Vehicle>;
 }
 
 export class VehicleService implements IVehicleService {
-  constructor(private vehicleRepository: IVehicleRepository) {}
+  constructor(
+    private vehicleRepository: IVehicleRepository,
+    private purchaseRepository: IPurchaseRepository,
+  ) {}
 
   async addVehicle(dto: AddVehicleDto): Promise<Vehicle> {
     const trimmedMake = dto.make ? dto.make.trim() : '';
@@ -150,8 +159,8 @@ export class VehicleService implements IVehicleService {
     return this.vehicleRepository.delete(id);
   }
 
-  async purchaseVehicle(id: string): Promise<Vehicle> {
-    const existingVehicle = await this.vehicleRepository.findById(id);
+  async purchaseVehicle(vehicleId: string, userId: string): Promise<PurchaseResult> {
+    const existingVehicle = await this.vehicleRepository.findById(vehicleId);
     if (!existingVehicle) {
       throw new VehicleNotFoundError();
     }
@@ -160,9 +169,17 @@ export class VehicleService implements IVehicleService {
       throw new OutOfStockError();
     }
 
-    return this.vehicleRepository.update(id, {
+    const updatedVehicle = await this.vehicleRepository.update(vehicleId, {
       quantity: existingVehicle.quantity - 1,
     });
+
+    const purchase = await this.purchaseRepository.create({
+      userId,
+      vehicleId,
+      purchasePrice: existingVehicle.price,
+    });
+
+    return { vehicle: updatedVehicle, purchase };
   }
 
   async restockVehicle(id: string, amount: number): Promise<Vehicle> {

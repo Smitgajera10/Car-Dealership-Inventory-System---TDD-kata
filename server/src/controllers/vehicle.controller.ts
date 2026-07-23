@@ -146,12 +146,13 @@ export class VehicleController {
 
   async purchase(req: Request, res: Response): Promise<Response> {
     const { id } = req.params;
+    const userId = req.user!.id;
 
-    const vehicle = await this.vehicleService.purchaseVehicle(id);
+    const result = await this.vehicleService.purchaseVehicle(id, userId);
 
     return res.status(200).json({
       success: true,
-      data: vehicle,
+      data: result,
     });
   }
 
