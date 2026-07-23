@@ -22,6 +22,13 @@ export interface Vehicle {
   imageUrl: string | null;
   createdAt: string;
   updatedAt: string;
+  // Extended optional automotive metadata for rich presentation
+  year?: number;
+  horsepower?: number;
+  transmission?: string;
+  fuelType?: string;
+  mileage?: number;
+  vin?: string;
 }
 
 export interface VehicleListResponse {

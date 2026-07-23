@@ -2,182 +2,169 @@
 @tailwind components;
 @tailwind utilities;
 
-/* ──────────────────────────────────────────────────
-   Base reset & design tokens
-────────────────────────────────────────────────── */
 @layer base {
   *, *::before, *::after {
     box-sizing: border-box;
   }
 
   html {
-    font-family: 'Inter', system-ui, sans-serif;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
     scroll-behavior: smooth;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    background-color: #0B1020;
+    color: #F3F4F6;
   }
 
   body {
-    @apply bg-surface-950 text-surface-50 min-h-screen;
+    background-color: #0B1020;
+    color: #F3F4F6;
+    min-height: 100vh;
+    overflow-x: hidden;
   }
 
-  h1, h2, h3, h4, h5, h6 {
-    @apply font-semibold tracking-tight;
-  }
-
+  /* Custom scrollbar */
   ::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
+    width: 8px;
+    height: 8px;
   }
 
   ::-webkit-scrollbar-track {
-    @apply bg-surface-900;
+    background: #0B1020;
   }
 
   ::-webkit-scrollbar-thumb {
-    @apply bg-surface-700 rounded-full;
+    background: rgba(255, 255, 255, 0.12);
+    border-radius: 9999px;
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    @apply bg-surface-300;
+    background: rgba(109, 93, 251, 0.4);
   }
 }
 
-/* ──────────────────────────────────────────────────
-   Component layer — reusable design system classes
-────────────────────────────────────────────────── */
 @layer components {
+  /* Cards */
+  .portal-card {
+    background-color: #131B2F;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 16px;
+    box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+  }
+
+  .portal-card-hover {
+    background-color: #131B2F;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 16px;
+    box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .portal-card-hover:hover {
+    border-color: rgba(109, 93, 251, 0.4);
+    transform: translateY(-4px);
+    box-shadow: 0 20px 35px -10px rgba(0, 0, 0, 0.7), 0 0 25px -5px rgba(109, 93, 251, 0.25);
+  }
+
+  /* Input & Select */
+  .portal-input {
+    width: 100%;
+    background-color: #0B1020;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    color: #F3F4F6;
+    padding: 0.625rem 1rem;
+    font-size: 0.875rem;
+    transition: all 0.2s ease;
+    outline: none;
+  }
+
+  .portal-input::placeholder {
+    color: #6B7280;
+  }
+
+  .portal-input:focus {
+    border-color: #6D5DFB;
+    box-shadow: 0 0 0 3px rgba(109, 93, 251, 0.2);
+  }
 
   /* Buttons */
-  .btn {
-    @apply inline-flex items-center justify-center gap-2 rounded-xl px-5 py-2.5 text-sm font-medium
-           transition-all duration-200 cursor-pointer focus:outline-none focus-visible:ring-2
-           focus-visible:ring-offset-2 focus-visible:ring-offset-surface-950 disabled:opacity-50
-           disabled:pointer-events-none select-none;
+  .portal-btn {
+    display: inline-flex;
+    items-center: center;
+    justify-content: center;
+    gap: 0.5rem;
+    border-radius: 12px;
+    padding: 0.55rem 1.15rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    cursor: pointer;
+    user-select: none;
   }
 
-  .btn-primary {
-    @apply btn bg-brand-600 text-white hover:bg-brand-500 active:scale-95
-           focus-visible:ring-brand-500 shadow-lg shadow-brand-900/40;
+  .portal-btn-primary {
+    @apply portal-btn;
+    background-color: #6D5DFB;
+    color: #ffffff;
+    box-shadow: 0 4px 15px rgba(109, 93, 251, 0.35);
   }
 
-  .btn-danger {
-    @apply btn bg-red-600 text-white hover:bg-red-500 active:scale-95
-           focus-visible:ring-red-500 shadow-lg shadow-red-900/40;
+  .portal-btn-primary:hover:not(:disabled) {
+    background-color: #5B4BE3;
+    box-shadow: 0 6px 20px rgba(109, 93, 251, 0.5);
+    transform: translateY(-1px);
   }
 
-  .btn-ghost {
-    @apply btn bg-transparent text-surface-300 hover:bg-surface-800 hover:text-surface-50
-           active:scale-95 focus-visible:ring-surface-500;
+  .portal-btn-primary:active:not(:disabled) {
+    transform: translateY(0);
   }
 
-  .btn-outline {
-    @apply btn border border-surface-700 text-surface-200 bg-transparent
-           hover:bg-surface-800  active:scale-95
-           focus-visible:ring-surface-500;
+  .portal-btn-secondary {
+    @apply portal-btn;
+    background-color: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #E5E7EB;
   }
 
-  .btn-success {
-    @apply btn bg-emerald-600 text-white hover:bg-emerald-500 active:scale-95
-           focus-visible:ring-emerald-500 shadow-lg shadow-emerald-900/40;
+  .portal-btn-secondary:hover:not(:disabled) {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.2);
+    color: #ffffff;
   }
 
-  /* Cards */
-  .card {
-    @apply bg-surface-900 border border-surface-800 rounded-2xl shadow-xl;
+  .portal-btn-danger {
+    @apply portal-btn;
+    background-color: rgba(240, 68, 56, 0.15);
+    border: 1px solid rgba(240, 68, 56, 0.3);
+    color: #F04438;
   }
 
-  .card-hover {
-    @apply card transition-all duration-300 hover:border-brand-700 hover:shadow-brand-900/20
-           hover:shadow-2xl hover:-translate-y-0.5;
+  .portal-btn-danger:hover:not(:disabled) {
+    background-color: #F04438;
+    color: #ffffff;
+    box-shadow: 0 4px 15px rgba(240, 68, 56, 0.4);
   }
 
-  /* Form inputs */
-  .input {
-    @apply w-full rounded-xl bg-surface-800 border border-surface-700 text-surface-50
-           placeholder:text-surface-500 px-4 py-2.5 text-sm
-           transition-all duration-200 outline-none
-           focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20;
-  }
-
-  .label {
-    @apply block text-sm font-medium text-surface-300 mb-1.5;
-  }
-
-  .form-error {
-    @apply text-red-400 text-xs mt-1;
-  }
-
-  /* Badge */
-  .badge {
-    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
-  }
-
-  .badge-green {
-    @apply badge bg-emerald-900/60 text-emerald-300 border border-emerald-800;
-  }
-
-  .badge-red {
-    @apply badge bg-red-900/60 text-red-300 border border-red-800;
-  }
-
-  .badge-blue {
-    @apply badge bg-brand-900/60 text-brand-300 border border-brand-800;
-  }
-
-  .badge-gray {
-    @apply badge bg-surface-800 text-surface-400 border border-surface-700;
-  }
-
-  /* Glass card */
-  .glass {
-    @apply bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl;
-  }
-
-  /* Loading spinner */
-  .spinner {
-    @apply animate-spin-slow rounded-full border-2 border-surface-700 border-t-brand-500;
-  }
-
-  /* Section container */
-  .container-app {
-    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
-  }
-
-  /* Gradient text */
-  .gradient-text {
-    @apply bg-gradient-to-r from-brand-400 to-brand-200 bg-clip-text text-transparent;
-  }
-
-  /* Divider */
-  .divider {
-    @apply border-t border-surface-800;
-  }
-
-  /* Modal overlay */
-  .modal-overlay {
-    @apply fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm animate-fade-in;
-  }
-
-  .modal-panel {
-    @apply card w-full max-w-lg mx-4 animate-slide-up p-6;
+  /* Skeleton Loading pulse */
+  .skeleton {
+    background: linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0.04) 25%,
+      rgba(255, 255, 255, 0.08) 37%,
+      rgba(255, 255, 255, 0.04) 63%
+    );
+    background-size: 400% 100%;
+    animation: skeleton-loading 1.4s ease infinite;
+    border-radius: 12px;
   }
 }
 
-/* ──────────────────────────────────────────────────
-   Utility overrides
-────────────────────────────────────────────────── */
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
+@keyframes skeleton-loading {
+  0% {
+    background-position: 100% 50%;
   }
-
-  .no-scrollbar::-webkit-scrollbar {
-    display: none;
-  }
-
-  .no-scrollbar {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
+  100% {
+    background-position: 0% 50%;
   }
 }

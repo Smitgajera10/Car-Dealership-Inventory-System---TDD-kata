@@ -44,7 +44,7 @@ export default function RegisterPage() {
       }
     } catch (err: unknown) {
       if (Axios.isAxiosError(err)) {
-        setError(err.response?.data?.message || 'Registration failed. Try a different email.');
+        setError(err.response?.data?.message || 'Registration failed.');
       } else {
         setError('An error occurred during registration.');
       }
@@ -54,13 +54,12 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="relative flex min-h-screen flex-col justify-center overflow-hidden bg-surface-950 px-4 py-12">
-      <div className="pointer-events-none absolute -top-40 right-1/2 translate-x-1/2 h-96 w-96 rounded-full bg-indigo-600/20 blur-3xl" />
-      <div className="pointer-events-none absolute bottom-0 left-10 h-80 w-80 rounded-full bg-brand-600/15 blur-3xl" />
+    <div className="relative flex min-h-screen flex-col justify-center overflow-hidden bg-[#0B1020] px-4 py-12 text-[#F3F4F6]">
+      <div className="pointer-events-none absolute -top-40 right-1/2 translate-x-1/2 h-96 w-96 rounded-full bg-[#6D5DFB]/15 blur-3xl" />
 
       <div className="relative sm:mx-auto sm:w-full sm:max-w-md">
         <div className="text-center">
-          <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-tr from-brand-600 to-indigo-500 shadow-xl shadow-brand-900/50">
+          <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-tr from-[#6D5DFB] to-[#8B7EFF] shadow-lg shadow-[#6D5DFB]/40">
             <svg
               className="h-8 w-8 text-white"
               fill="none"
@@ -76,69 +75,73 @@ export default function RegisterPage() {
             </svg>
           </div>
           <h2 className="mt-6 text-3xl font-extrabold tracking-tight text-white">
-            Create an <span className="gradient-text">Account</span>
+            Register Account
           </h2>
-          <p className="mt-2 text-sm text-surface-400">
-            Join AutoVault to explore and purchase dealership inventory
+          <p className="mt-1.5 text-xs text-gray-400 font-medium">
+            Access AutoVault Dealership Portal
           </p>
         </div>
 
-        <div className="card mt-8 p-8 shadow-2xl backdrop-blur-xl">
+        <div className="portal-card mt-8 p-8 shadow-2xl backdrop-blur-xl border-white/10">
           {error && (
-            <div className="mb-6 flex items-center gap-3 rounded-xl border border-red-500/30 bg-red-500/10 p-4 text-sm text-red-300 animate-fade-in">
-              <svg className="h-5 w-5 shrink-0 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
+            <div className="mb-6 flex items-center gap-3 rounded-xl border border-[#F04438]/30 bg-[#F04438]/10 p-3.5 text-xs text-[#F04438] animate-fade-in">
+              <span className="text-base">⚠️</span>
               <span>{error}</span>
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-5">
+          <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="label">Email Address</label>
+              <label className="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-1.5">
+                Email Address
+              </label>
               <input
                 type="email"
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="name@example.com"
-                className="input"
+                placeholder="name@dealership.com"
+                className="portal-input"
               />
             </div>
 
             <div>
-              <label className="label">Password</label>
+              <label className="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-1.5">
+                Password
+              </label>
               <input
                 type="password"
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="At least 6 characters"
-                className="input"
+                className="portal-input"
               />
             </div>
 
             <div>
-              <label className="label">Confirm Password</label>
+              <label className="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-1.5">
+                Confirm Password
+              </label>
               <input
                 type="password"
                 required
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 placeholder="Repeat password"
-                className="input"
+                className="portal-input"
               />
             </div>
 
             <button
               type="submit"
               disabled={loading}
-              className="btn-primary w-full py-3 text-base shadow-brand-900/50"
+              className="portal-btn-primary w-full py-3 text-sm font-bold shadow-lg shadow-[#6D5DFB]/30"
             >
               {loading ? (
                 <div className="flex items-center gap-2">
-                  <div className="spinner h-4 w-4" />
-                  <span>Creating Account...</span>
+                  <div className="h-4 w-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                  <span>Registering...</span>
                 </div>
               ) : (
                 'Create Account'
@@ -146,9 +149,9 @@ export default function RegisterPage() {
             </button>
           </form>
 
-          <p className="mt-6 text-center text-sm text-surface-400">
-            Already have an account?{' '}
-            <Link to="/login" className="font-semibold text-brand-400 hover:text-brand-300 underline">
+          <p className="mt-6 text-center text-xs text-gray-400">
+            Already registered?{' '}
+            <Link to="/login" className="font-semibold text-[#6D5DFB] hover:underline">
               Sign in
             </Link>
           </p>
