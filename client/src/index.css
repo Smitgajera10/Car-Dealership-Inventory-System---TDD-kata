@@ -8,72 +8,102 @@
   }
 
   html {
-    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
     scroll-behavior: smooth;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    background-color: #F8FAFC;
-    color: #0F172A;
+    background-color: #F2FAF4;
+    color: #0A2B23;
   }
 
   body {
-    background-color: #F8FAFC;
-    color: #0F172A;
+    background-color: #F2FAF4;
+    color: #0A2B23;
     min-height: 100vh;
     overflow-x: hidden;
   }
 
+  h1, h2, h3, .font-serif-heading {
+    font-family: 'DM Serif Display', 'Playfair Display', Georgia, serif;
+  }
+
   ::-webkit-scrollbar { width: 6px; height: 6px; }
-  ::-webkit-scrollbar-track { background: #F1F5F9; }
-  ::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 9999px; }
-  ::-webkit-scrollbar-thumb:hover { background: #6D5DFB; }
+  ::-webkit-scrollbar-track { background: #E8F7ED; }
+  ::-webkit-scrollbar-thumb { background: #BBEBD0; border-radius: 9999px; }
+  ::-webkit-scrollbar-thumb:hover { background: #024738; }
 }
 
 @layer components {
-  /* ── Cards ──────────────────────────────── */
+  /* ── Incubyte Cards ───────────────────────── */
   .portal-card {
     background-color: #FFFFFF;
-    border: 1px solid #E2E8F0;
-    border-radius: 16px;
-    box-shadow: 0 1px 4px 0 rgba(15, 23, 42, 0.06);
+    border: 1px solid #D1EFE0;
+    border-radius: 24px;
+    box-shadow: 0 10px 30px -5px rgba(2, 71, 56, 0.05), 0 2px 6px rgba(2, 71, 56, 0.02);
   }
 
   .portal-card-hover {
     background-color: #FFFFFF;
-    border: 1px solid #E2E8F0;
-    border-radius: 16px;
-    box-shadow: 0 1px 4px 0 rgba(15, 23, 42, 0.06);
-    transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+    border: 1px solid #D1EFE0;
+    border-radius: 24px;
+    box-shadow: 0 10px 30px -5px rgba(2, 71, 56, 0.05);
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   .portal-card-hover:hover {
-    border-color: #6D5DFB;
-    transform: translateY(-3px);
-    box-shadow: 0 12px 28px -8px rgba(109, 93, 251, 0.18), 0 2px 8px rgba(15, 23, 42, 0.08);
+    border-color: #A3E635;
+    transform: translateY(-4px);
+    box-shadow: 0 20px 40px -10px rgba(2, 71, 56, 0.12), 0 4px 12px rgba(2, 71, 56, 0.04);
+  }
+
+  .incubyte-mint-card {
+    background: linear-gradient(135deg, #F7FDF9 0%, #EBF8F1 100%);
+    border: 1px solid #D1EFE0;
+    border-radius: 24px;
+  }
+
+  .incubyte-lime-card {
+    background: linear-gradient(135deg, #C0F762 0%, #D8F998 100%);
+    border: 1px solid #B2F348;
+    color: #024738;
+    border-radius: 24px;
+  }
+
+  .incubyte-blue-card {
+    background: linear-gradient(135deg, #52C5E4 0%, #7DE2F8 100%);
+    border: 1px solid #3DBADB;
+    color: #024738;
+    border-radius: 24px;
+  }
+
+  .incubyte-dark-card {
+    background-color: #06211C;
+    border: 1px solid rgba(209, 239, 224, 0.15);
+    color: #FFFFFF;
+    border-radius: 24px;
   }
 
   /* ── Inputs ─────────────────────────────── */
   .portal-input {
     width: 100%;
     background-color: #FFFFFF;
-    border: 1px solid #E2E8F0;
-    border-radius: 10px;
-    color: #0F172A;
-    padding: 0.625rem 1rem;
+    border: 1px solid #D1EFE0;
+    border-radius: 14px;
+    color: #0A2B23;
+    padding: 0.65rem 1rem;
     font-size: 0.875rem;
     transition: border-color 0.2s, box-shadow 0.2s;
     outline: none;
   }
 
-  .portal-input::placeholder { color: #94A3B8; }
+  .portal-input::placeholder { color: #6A8D83; }
 
   .portal-input:focus {
-    border-color: #6D5DFB;
-    box-shadow: 0 0 0 3px rgba(109, 93, 251, 0.12);
+    border-color: #024738;
+    box-shadow: 0 0 0 3px rgba(2, 71, 56, 0.12);
   }
 
-  /* select option colours */
-  .portal-input option { background: #fff; color: #0F172A; }
+  .portal-input option { background: #fff; color: #0A2B23; }
 
   /* ── Buttons ────────────────────────────── */
   .portal-btn {
@@ -81,11 +111,11 @@
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
-    border-radius: 10px;
-    padding: 0.55rem 1.15rem;
+    border-radius: 9999px;
+    padding: 0.6rem 1.35rem;
     font-size: 0.875rem;
-    font-weight: 600;
-    transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+    font-weight: 700;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
     cursor: pointer;
     user-select: none;
     white-space: nowrap;
@@ -93,48 +123,67 @@
 
   .portal-btn-primary {
     @apply portal-btn;
-    background-color: #6D5DFB;
-    color: #ffffff;
-    box-shadow: 0 2px 8px rgba(109, 93, 251, 0.3);
+    background-color: #024738;
+    color: #FFFFFF;
+    box-shadow: 0 4px 14px rgba(2, 71, 56, 0.25);
   }
   .portal-btn-primary:hover:not(:disabled) {
-    background-color: #5B4BE3;
-    box-shadow: 0 4px 16px rgba(109, 93, 251, 0.4);
+    background-color: #013328;
+    box-shadow: 0 6px 20px rgba(2, 71, 56, 0.35);
     transform: translateY(-1px);
   }
   .portal-btn-primary:active:not(:disabled) { transform: translateY(0); }
 
+  .portal-btn-lime {
+    @apply portal-btn;
+    background-color: #C0F762;
+    color: #024738;
+    box-shadow: 0 4px 14px rgba(192, 247, 98, 0.4);
+  }
+  .portal-btn-lime:hover:not(:disabled) {
+    background-color: #B2F348;
+    box-shadow: 0 6px 20px rgba(192, 247, 98, 0.6);
+    transform: translateY(-1px);
+  }
+
   .portal-btn-secondary {
     @apply portal-btn;
-    background-color: #F8FAFC;
-    border: 1px solid #E2E8F0;
-    color: #475569;
+    background-color: #FFFFFF;
+    border: 1px solid #D1EFE0;
+    color: #024738;
   }
   .portal-btn-secondary:hover:not(:disabled) {
-    background-color: #F1F5F9;
-    border-color: #CBD5E1;
-    color: #0F172A;
+    background-color: #EBF8F1;
+    border-color: #A3E635;
+    color: #024738;
   }
 
   .portal-btn-danger {
     @apply portal-btn;
     background-color: #FEF2F2;
     border: 1px solid #FECACA;
-    color: #EF4444;
+    color: #DC2626;
   }
   .portal-btn-danger:hover:not(:disabled) {
-    background-color: #EF4444;
-    border-color: #EF4444;
+    background-color: #DC2626;
+    border-color: #DC2626;
     color: #ffffff;
-    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.35);
+    box-shadow: 0 4px 12px rgba(220, 38, 38, 0.35);
+  }
+
+  /* Incubyte Double Pill Arrow Button */
+  .incubyte-btn-group {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
   }
 
   /* ── Skeleton ───────────────────────────── */
   .skeleton {
-    background: linear-gradient(90deg, #F1F5F9 25%, #E2E8F0 50%, #F1F5F9 75%);
+    background: linear-gradient(90deg, #EBF7F0 25%, #D7F2E3 50%, #EBF7F0 75%);
     background-size: 400% 100%;
     animation: skeleton-loading 1.4s ease infinite;
-    border-radius: 8px;
+    border-radius: 12px;
   }
 }
 
@@ -155,15 +204,9 @@
   from { opacity: 0; transform: translateY(8px); }
   to   { opacity: 1; transform: translateY(0); }
 }
-@keyframes gradient-shift {
-  0%   { background-position: 0%   50%; }
-  50%  { background-position: 100% 50%; }
-  100% { background-position: 0%   50%; }
-}
 
 .animate-fade-in       { animation: fade-in 0.3s ease both; }
 .animate-fade-in-up    { animation: fade-in-up 0.45s cubic-bezier(0.16,1,0.3,1) both; }
 .animation-delay-150   { animation-delay: 150ms; }
 .animation-delay-300   { animation-delay: 300ms; }
 .animate-slide-up      { animation: slide-up 0.18s cubic-bezier(0.16,1,0.3,1) both; }
-.animate-gradient      { animation: gradient-shift 4s ease infinite; }

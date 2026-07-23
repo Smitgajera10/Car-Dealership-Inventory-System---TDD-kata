@@ -13,82 +13,92 @@ export function SalesView() {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-20">
-        <div className="h-8 w-8 animate-spin rounded-full border-2 border-[#6D5DFB] border-t-transparent" />
+        <div className="h-8 w-8 animate-spin rounded-full border-2 border-[#024738] border-t-transparent" />
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="rounded-2xl border border-red-200 bg-red-50 p-6 text-center">
-        <p className="text-sm text-red-500">Failed to load sales data. Please try again.</p>
+      <div className="rounded-3xl border border-red-200 bg-red-50 p-6 text-center">
+        <p className="text-sm text-red-600 font-bold">Failed to load sales data. Please try again.</p>
       </div>
     );
   }
 
   return (
     <div className="space-y-6 animate-fade-in">
-      {/* Header */}
-      <div className="flex items-center justify-between border-b border-slate-200 pb-4">
+      {/* Editorial Header */}
+      <div className="flex items-center justify-between border-b border-[#D1EFE0] pb-4">
         <div>
-          <h2 className="text-xl font-bold text-slate-900">Sales Ledger</h2>
-          <p className="text-xs text-slate-400 mt-0.5">All completed vehicle purchases</p>
-        </div>
-        <div className="flex items-center gap-2">
-          <span className="rounded-full bg-[#6D5DFB]/10 border border-[#6D5DFB]/20 px-3 py-1 text-xs font-semibold text-[#6D5DFB]">
-            {purchases.length} transaction{purchases.length !== 1 ? 's' : ''}
+          <span className="text-[10px] font-extrabold uppercase tracking-widest text-[#024738] bg-[#E8FCC9] border border-[#B2F348] px-3 py-1 rounded-full">
+            Admin Governance
           </span>
-          <span className="rounded-full bg-emerald-50 border border-emerald-200 px-3 py-1 text-xs font-bold text-emerald-600">
-            ${totalRevenue.toLocaleString()} revenue
+          <h2 className="text-3xl font-serif font-bold text-[#024738] mt-2">Dealership Sales Audit Ledger</h2>
+          <p className="text-xs text-[#47695F] font-medium">Verified vehicle acquisitions, transaction logs, and buyer audit trail</p>
+        </div>
+        <div className="flex items-center gap-3">
+          <span className="rounded-full bg-white border border-[#D1EFE0] px-4 py-1.5 text-xs font-bold text-[#024738] shadow-sm">
+            {purchases.length} Transaction{purchases.length !== 1 ? 's' : ''}
+          </span>
+          <span className="rounded-full bg-[#024738] px-4 py-1.5 text-xs font-extrabold text-[#C0F762] shadow-sm">
+            Total Revenue: ${totalRevenue.toLocaleString()}
           </span>
         </div>
       </div>
 
+      {/* Audit Table */}
       {purchases.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-16 text-center">
-          <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-slate-100 border border-slate-200">
-            <svg className="h-8 w-8 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-[#E8F7ED] border border-[#D1EFE0]">
+            <svg className="h-8 w-8 text-[#024738]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
             </svg>
           </div>
-          <h3 className="text-base font-bold text-slate-700 mb-1">No Sales Yet</h3>
-          <p className="text-sm text-slate-400">Purchase transactions will appear here once customers buy vehicles.</p>
+          <h3 className="text-2xl font-serif font-bold text-[#024738] mb-1">No Sales Executed Yet</h3>
+          <p className="text-sm text-[#47695F] font-medium">Completed customer purchase transactions will be logged in real time here.</p>
         </div>
       ) : (
-        <div className="portal-card overflow-hidden">
+        <div className="portal-card overflow-hidden bg-white">
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
-              <thead className="bg-slate-50 border-b border-slate-200">
+              <thead className="bg-[#F7FDF9] text-[#024738] uppercase tracking-wider font-extrabold border-b border-[#D1EFE0]">
                 <tr>
-                  {['Purchase ID', 'Vehicle', 'Buyer', 'Amount', 'Date', 'Status'].map((h) => (
-                    <th key={h} className="px-4 py-3 text-[11px] font-bold uppercase tracking-wider text-slate-400">{h}</th>
-                  ))}
+                  <th className="p-4">Transaction ID</th>
+                  <th className="p-4">Vehicle Purchased</th>
+                  <th className="p-4">Buyer Account</th>
+                  <th className="p-4">Amount ($)</th>
+                  <th className="p-4">Date & Time</th>
+                  <th className="p-4">Audit Status</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-[#E8F7ED] text-[#0A2B23] font-medium">
                 {purchases.map((purchase) => (
-                  <tr key={purchase.id} className="hover:bg-slate-50 transition-colors">
-                    <td className="px-4 py-3 font-mono font-semibold text-[#6D5DFB]">
-                      {purchase.id.slice(0, 8).toUpperCase()}
+                  <tr key={purchase.id} className="hover:bg-[#F2FAF4] transition-colors">
+                    <td className="p-4 font-mono font-bold text-[#024738]">
+                      #{purchase.id.slice(0, 8).toUpperCase()}
                     </td>
-                    <td className="px-4 py-3 font-semibold text-slate-800">
+                    <td className="p-4 font-extrabold text-[#024738]">
                       {purchase.vehicle.make} {purchase.vehicle.model}
                     </td>
-                    <td className="px-4 py-3 text-slate-500">
+                    <td className="p-4 text-[#47695F] font-semibold">
                       {purchase.user?.email ?? 'Unknown'}
                     </td>
-                    <td className="px-4 py-3 font-bold text-emerald-600">
+                    <td className="p-4 font-extrabold text-[#059669]">
                       ${purchase.purchasePrice.toLocaleString()}
                     </td>
-                    <td className="px-4 py-3 text-slate-400">
+                    <td className="p-4 text-[#5E7E75]">
                       {new Date(purchase.createdAt).toLocaleString('en-US', {
-                        month: 'short', day: 'numeric', year: 'numeric',
-                        hour: '2-digit', minute: '2-digit',
+                        month: 'short',
+                        day: 'numeric',
+                        year: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit',
                       })}
                     </td>
-                    <td className="px-4 py-3">
-                      <span className="rounded-full bg-emerald-50 border border-emerald-200 text-emerald-600 px-2.5 py-0.5 text-[10px] font-bold uppercase">
-                        Completed
+                    <td className="p-4">
+                      <span className="rounded-full bg-[#E8FCC9] border border-[#B2F348] text-[#024738] px-3 py-0.5 text-[10px] font-extrabold uppercase">
+                        ✓ Verified
                       </span>
                     </td>
                   </tr>

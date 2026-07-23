@@ -76,7 +76,7 @@ export default function CatalogPage() {
       queryClient.invalidateQueries({ queryKey: ['my-purchases'] });
       queryClient.invalidateQueries({ queryKey: ['all-purchases'] });
       showNotification(
-        `🎉 Purchase Successful! Your order has been processed.`
+        `🎉 Purchase Successful! Your vehicle order has been processed.`
       );
     },
     onError: (err: unknown) => {
@@ -244,8 +244,7 @@ export default function CatalogPage() {
   }, [vehicles, searchTerm, globalSearch, selectedCategory, selectedMake, stockStatus, minPrice, maxPrice, sortBy]);
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 pb-24">
-      {/* Top Navbar */}
+    <div className="min-h-screen bg-[#F2FAF4] text-[#0A2B23] pb-24">
       <Navbar
         activeTab={activeTab}
         setActiveTab={setActiveTab}
@@ -256,16 +255,16 @@ export default function CatalogPage() {
 
       {/* Floating Toast Notification */}
       {notification && (
-        <div className="fixed bottom-6 right-20 z-50 animate-slide-up">
+        <div className="fixed bottom-6 right-8 z-50 animate-slide-up">
           <div
-            className={`flex items-center gap-3 rounded-2xl px-5 py-3.5 text-xs font-semibold shadow-2xl backdrop-blur-md border ${
+            className={`flex items-center gap-3 rounded-full px-6 py-3 text-xs font-bold shadow-2xl backdrop-blur-md border ${
               notification.type === 'success'
-                ? 'bg-[#16C784]/15 text-[#16C784] border-[#16C784]/40 shadow-[#16C784]/20'
-                : 'bg-[#F04438]/15 text-[#F04438] border-[#F04438]/40 shadow-[#F04438]/20'
+                ? 'bg-[#024738] text-[#C0F762] border-[#024738]'
+                : 'bg-red-600 text-white border-red-700'
             }`}
           >
             <span>{notification.message}</span>
-            <button onClick={() => setNotification(null)} className="text-gray-400 hover:text-white ml-2">
+            <button onClick={() => setNotification(null)} className="text-gray-300 hover:text-white ml-2">
               ✕
             </button>
           </div>
@@ -273,7 +272,7 @@ export default function CatalogPage() {
       )}
 
       {/* Container Content Area */}
-      <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-6 space-y-6">
+      <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-2 space-y-6">
         
         {/* Render Tab Views */}
         {activeTab === 'analytics' ? (
@@ -308,54 +307,54 @@ export default function CatalogPage() {
               makesList={makesList}
             />
 
-            {/* Vehicle Grid Header */}
+            {/* Vehicle Grid Header (Editorial Style) */}
             <div className="flex items-center justify-between pt-2">
-              <h2 className="text-lg font-extrabold tracking-tight text-white flex items-center gap-2">
-                <span>Vehicle Inventory</span>
-                <span className="text-xs font-bold text-gray-400 bg-white/5 border border-white/10 px-2.5 py-0.5 rounded-full">
-                  {filteredVehicles.length} Listed
+              <h2 className="text-2xl font-serif font-bold text-[#024738] flex items-center gap-3">
+                <span>Dealership Inventory</span>
+                <span className="text-xs font-extrabold text-[#024738] bg-[#E8FCC9] border border-[#B2F348] px-3 py-1 rounded-full font-sans">
+                  {filteredVehicles.length} Models Listed
                 </span>
               </h2>
             </div>
 
             {/* Vehicles Grid / Skeleton / Empty State */}
             {isLoading ? (
-              /* Skeleton Cards Loader Grid (Desktop 4 col, Laptop 3 col, Tablet 2 col, Mobile 1 col) */
+              /* Skeleton Loader Grid */
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                 {[...Array(8)].map((_, i) => (
-                  <div key={i} className="portal-card overflow-hidden space-y-3 p-4">
-                    <div className="skeleton aspect-[16/9] w-full" />
+                  <div key={i} className="portal-card overflow-hidden space-y-3 p-5 bg-white">
+                    <div className="skeleton aspect-[16/10] w-full rounded-2xl" />
                     <div className="skeleton h-5 w-3/4" />
                     <div className="skeleton h-6 w-1/2" />
                     <div className="skeleton h-12 w-full" />
-                    <div className="skeleton h-9 w-full" />
+                    <div className="skeleton h-10 w-full rounded-full" />
                   </div>
                 ))}
               </div>
             ) : isError ? (
-              <div className="portal-card p-8 text-center max-w-md mx-auto my-12 border-[#F04438]/30">
+              <div className="portal-card p-8 text-center max-w-md mx-auto my-12 bg-white border-red-200">
                 <span className="text-3xl block mb-2">⚠️</span>
-                <h3 className="text-base font-bold text-white">Database Connection Failure</h3>
-                <p className="text-xs text-gray-400 mt-1">Check backend server running at http://localhost:3000</p>
+                <h3 className="text-lg font-bold text-red-600">Database Connection Failure</h3>
+                <p className="text-xs text-[#47695F] mt-1">Verify backend server is running on http://localhost:3000</p>
               </div>
             ) : filteredVehicles.length === 0 ? (
               /* Empty State Illustration */
-              <div className="portal-card p-12 text-center max-w-md mx-auto my-12 border-white/10 space-y-3 animate-fade-in">
-                <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-[#6D5DFB]/10 border border-[#6D5DFB]/20 text-[#6D5DFB]">
+              <div className="portal-card p-12 text-center max-w-md mx-auto my-12 bg-white border-[#D1EFE0] space-y-3 animate-fade-in">
+                <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-[#E8F7ED] border border-[#D1EFE0] text-[#024738]">
                   <svg className="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
                   </svg>
                 </div>
-                <h3 className="text-lg font-bold text-white">No Vehicles Match Your Query</h3>
-                <p className="text-xs text-gray-400">
-                  Try broadening your search term, adjusting price bounds, or resetting category filters.
+                <h3 className="text-xl font-serif font-bold text-[#024738]">No Vehicles Match Filter Criteria</h3>
+                <p className="text-xs text-[#47695F] font-medium">
+                  Try broadening your search term, adjusting price bounds, or resetting category selection.
                 </p>
-                <button onClick={handleResetFilters} className="portal-btn-secondary text-xs mt-2">
+                <button onClick={handleResetFilters} className="portal-btn-primary text-xs mt-2">
                   Clear All Filters
                 </button>
               </div>
             ) : (
-              /* Responsive Vehicles Grid: Desktop (4 cols), Laptop (3 cols), Tablet (2 cols), Mobile (1 col) */
+              /* Vehicles Grid */
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                 {filteredVehicles.map((vehicle) => (
                   <VehicleCard
@@ -376,7 +375,7 @@ export default function CatalogPage() {
         )}
       </main>
 
-      {/* Floating Action Button (FAB) for Admin */}
+      {/* Floating Action Button for Admin */}
       <FloatingActionButton onClick={() => setIsAddModalOpen(true)} />
 
       {/* Add / Edit Vehicle Modal */}

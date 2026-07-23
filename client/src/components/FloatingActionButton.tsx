@@ -11,7 +11,7 @@ export function FloatingActionButton({ onClick }: FloatingActionButtonProps) {
   return (
     <button
       onClick={onClick}
-      className="fixed bottom-6 right-6 z-40 flex h-14 w-14 items-center justify-center rounded-2xl bg-[#6D5DFB] text-white shadow-xl shadow-[#6D5DFB]/35 hover:scale-110 hover:bg-[#5B4BE3] hover:shadow-[#6D5DFB]/50 transition-all duration-200 group"
+      className="fixed bottom-6 right-6 z-40 flex h-14 w-14 items-center justify-center rounded-2xl bg-[#024738] text-white shadow-xl shadow-[#024738]/35 hover:scale-110 hover:bg-[#013328] hover:shadow-[#024738]/50 transition-all duration-200 group"
       title="Add New Vehicle"
     >
       <svg className="h-7 w-7 transition-transform group-hover:rotate-90 duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">

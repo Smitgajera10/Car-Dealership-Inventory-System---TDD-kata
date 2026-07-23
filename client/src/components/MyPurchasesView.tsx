@@ -12,30 +12,30 @@ export function MyPurchasesView() {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-20">
-        <div className="h-8 w-8 animate-spin rounded-full border-2 border-[#6D5DFB] border-t-transparent" />
+        <div className="h-8 w-8 animate-spin rounded-full border-2 border-[#024738] border-t-transparent" />
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="rounded-2xl border border-red-200 bg-red-50 p-6 text-center">
-        <p className="text-sm text-red-500">Failed to load your purchases. Please try again.</p>
+      <div className="rounded-3xl border border-red-200 bg-red-50 p-6 text-center">
+        <p className="text-sm text-red-600 font-bold">Failed to load your purchases. Please try again.</p>
       </div>
     );
   }
 
   if (purchases.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center py-24 text-center">
-        <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-slate-100 border border-slate-200">
-          <svg className="h-8 w-8 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <div className="flex flex-col items-center justify-center py-20 text-center">
+        <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-[#E8F7ED] border border-[#D1EFE0]">
+          <svg className="h-8 w-8 text-[#024738]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
           </svg>
         </div>
-        <h3 className="text-base font-bold text-slate-700 mb-1">No Purchases Yet</h3>
-        <p className="text-sm text-slate-400 max-w-sm">
-          You haven't purchased any vehicles yet. Browse the inventory and find your perfect car.
+        <h3 className="text-2xl font-serif font-bold text-[#024738] mb-1">No Purchases Yet</h3>
+        <p className="text-sm text-[#47695F] max-w-sm font-medium">
+          You haven't acquired any vehicles yet. Explore our live catalog and find your next vehicle.
         </p>
       </div>
     );
@@ -45,36 +45,50 @@ export function MyPurchasesView() {
 
   return (
     <div className="space-y-6 animate-fade-in">
-      {/* Summary cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div className="portal-card p-5 border-l-4 border-l-[#6D5DFB]">
-          <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">Total Purchases</p>
-          <p className="text-2xl font-extrabold text-slate-900">{purchases.length}</p>
+      {/* Editorial Header */}
+      <div className="flex items-center justify-between border-b border-[#D1EFE0] pb-4">
+        <div>
+          <span className="text-[10px] font-extrabold uppercase tracking-widest text-[#059669] bg-[#E8FCC9] border border-[#B2F348] px-3 py-1 rounded-full">
+            Customer Dashboard
+          </span>
+          <h2 className="text-3xl font-serif font-bold text-[#024738] mt-2">My Vehicle Purchases</h2>
+          <p className="text-xs text-[#47695F] font-medium">Verified acquisition history and ownership records</p>
         </div>
-        <div className="portal-card p-5 border-l-4 border-l-emerald-400">
-          <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">Total Spent</p>
-          <p className="text-2xl font-extrabold text-[#6D5DFB]">
+      </div>
+
+      {/* Summary Cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div className="portal-card p-5 bg-white">
+          <p className="text-[10px] font-bold uppercase tracking-wider text-[#47695F] mb-1">Total Purchases</p>
+          <p className="text-3xl font-extrabold text-[#024738] font-sans">{purchases.length}</p>
+        </div>
+        <div className="portal-card p-5 bg-[#E8FCC9] border-[#B2F348]">
+          <p className="text-[10px] font-bold uppercase tracking-wider text-[#024738] mb-1">Total Capital Invested</p>
+          <p className="text-3xl font-extrabold text-[#024738] font-sans">
             ${totalSpent.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
           </p>
         </div>
-        <div className="portal-card p-5 border-l-4 border-l-slate-300">
-          <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">Last Purchase</p>
-          <p className="text-2xl font-extrabold text-slate-900">
+        <div className="portal-card p-5 bg-white">
+          <p className="text-[10px] font-bold uppercase tracking-wider text-[#47695F] mb-1">Latest Acquisition</p>
+          <p className="text-3xl font-extrabold text-[#024738] font-sans">
             {new Date(purchases[0].createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
           </p>
         </div>
       </div>
 
-      {/* Purchase list */}
-      <div className="portal-card overflow-hidden">
-        <div className="border-b border-slate-100 px-6 py-4">
-          <h3 className="text-sm font-bold text-slate-900">Purchase History</h3>
+      {/* Purchase List */}
+      <div className="portal-card overflow-hidden bg-white">
+        <div className="border-b border-[#D1EFE0] px-6 py-4 bg-[#F7FDF9] flex items-center justify-between">
+          <h3 className="text-xs font-bold uppercase tracking-wider text-[#024738]">Ownership Audit Trail</h3>
+          <span className="text-[10px] font-extrabold text-[#059669] bg-[#E8F7ED] border border-[#D1EFE0] px-2.5 py-0.5 rounded-full">
+            Verified
+          </span>
         </div>
-        <div className="divide-y divide-slate-100">
+        <div className="divide-y divide-[#E8F7ED]">
           {purchases.map((purchase) => (
-            <div key={purchase.id} className="flex items-center gap-4 px-6 py-4 hover:bg-slate-50 transition-colors">
-              {/* Thumbnail */}
-              <div className="h-14 w-20 flex-shrink-0 overflow-hidden rounded-xl bg-slate-100 border border-slate-200">
+            <div key={purchase.id} className="flex items-center gap-4 px-6 py-4 hover:bg-[#F2FAF4] transition-colors">
+              {/* Vehicle Image */}
+              <div className="h-14 w-20 flex-shrink-0 overflow-hidden rounded-2xl bg-[#E8F7ED] border border-[#D1EFE0]">
                 {purchase.vehicle.imageUrl ? (
                   <img
                     src={purchase.vehicle.imageUrl}
@@ -83,29 +97,31 @@ export function MyPurchasesView() {
                   />
                 ) : (
                   <div className="flex h-full w-full items-center justify-center">
-                    <svg className="h-6 w-6 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="h-6 w-6 text-[#47695F]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                     </svg>
                   </div>
                 )}
               </div>
 
-              {/* Details */}
+              {/* Vehicle Details */}
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-semibold text-slate-800 truncate">
+                <p className="text-sm font-extrabold text-[#024738] truncate">
                   {purchase.vehicle.make} {purchase.vehicle.model}
                 </p>
-                <p className="text-xs text-slate-400">{purchase.vehicle.category}</p>
+                <p className="text-xs text-[#47695F] font-medium">{purchase.vehicle.category}</p>
               </div>
 
-              {/* Price + date */}
+              {/* Purchase Price */}
               <div className="text-right flex-shrink-0">
-                <p className="text-sm font-extrabold text-emerald-600">
+                <p className="text-sm font-extrabold text-[#059669]">
                   ${purchase.purchasePrice.toLocaleString()}
                 </p>
-                <p className="text-[10px] text-slate-400 mt-0.5">
+                <p className="text-[10px] text-[#5E7E75] font-medium">
                   {new Date(purchase.createdAt).toLocaleDateString('en-US', {
-                    month: 'short', day: 'numeric', year: 'numeric',
+                    month: 'short',
+                    day: 'numeric',
+                    year: 'numeric',
                   })}
                 </p>
               </div>

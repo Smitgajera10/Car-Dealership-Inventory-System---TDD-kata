@@ -3,265 +3,195 @@ import { useAuth } from '../contexts/AuthContext';
 
 const features = [
   {
-    icon: (
-      <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-      </svg>
-    ),
-    title: 'Live Inventory',
-    desc: 'Browse, search, and filter the full vehicle catalog in real time — by make, category, price, or stock status.',
+    title: 'Spec before code.',
+    desc: 'The thinking happens before a line of code is written, so the build stays on target and rework stays small.',
+    badge: 'Spec-driven',
   },
   {
-    icon: (
-      <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
-      </svg>
-    ),
-    title: 'One-Click Purchase',
-    desc: 'Acquire any available vehicle instantly. Your full purchase history is always one tap away.',
+    title: 'Test-first, always.',
+    desc: 'A failing test sets the target. Code earns its way in by passing it, not by looking right.',
+    badge: 'TDD Rigor',
   },
   {
-    icon: (
-      <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-      </svg>
-    ),
-    title: 'Admin Controls',
-    desc: 'Full inventory management — add, edit, restock, or remove vehicles. Sales analytics for admins.',
+    title: 'Clean code, by habit.',
+    desc: 'We refactor as we go, so the codebase stays fast to work in long after we hand it over.',
+    badge: 'Clean Architecture',
   },
 ];
 
 const stats = [
   { label: 'Vehicles Tracked', value: '10,000+' },
   { label: 'Revenue Processed', value: '$2.4B+' },
-  { label: 'Dealer Staff', value: '500+' },
-  { label: 'Uptime SLA', value: '99.9%' },
+  { label: 'Dealer Partners', value: '140+' },
+  { label: 'TDD Test Pass Rate', value: '100%' },
 ];
 
 export default function LandingPage() {
   const { isAuthenticated } = useAuth();
 
   return (
-    <div className="min-h-screen bg-white text-slate-900 overflow-x-hidden">
+    <div className="min-h-screen bg-[#F2FAF4] text-[#0A2B23] overflow-x-hidden font-sans">
 
-      {/* ── NAV ─────────────────────────────────────── */}
-      <nav className="sticky top-0 z-50 border-b border-slate-200 bg-white/90 backdrop-blur-md">
-        <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center gap-2.5">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#6D5DFB] shadow-md shadow-[#6D5DFB]/25">
-              <svg className="h-5 w-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <nav className="sticky top-4 z-50 px-4 sm:px-6 lg:px-8">
+        <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 rounded-full border border-[#D1EFE0] bg-white/95 px-6 shadow-lg shadow-[#024738]/5 backdrop-blur-xl">
+          {/* Logo */}
+          <Link to="/" className="flex items-center gap-2.5 shrink-0 group">
+            <div className="flex h-9 w-9 items-center justify-center rounded-full bg-[#024738] shadow-md shadow-[#024738]/20 transition-transform group-hover:scale-105">
+              <svg className="h-5 w-5 text-[#C0F762]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
               </svg>
             </div>
-            <span className="text-lg font-extrabold tracking-tight text-slate-900">
-              Auto<span className="text-[#6D5DFB]">Vault</span>
+            <span className="text-xl font-bold tracking-tight text-[#024738]">
+              <span className="text-[#024738] font-light">Auto</span><span className="text-[#059669] font-bold">Vault</span>
             </span>
+          </Link>
+
+          {/* Links */}
+          <div className="hidden md:flex items-center gap-6 text-xs font-bold text-[#47695F]">
+            <span className="hover:text-[#024738] cursor-pointer transition-colors">Services</span>
+            <span className="hover:text-[#024738] cursor-pointer transition-colors">About Us</span>
+            <span className="hover:text-[#024738] cursor-pointer transition-colors">Resources</span>
           </div>
 
           <div className="flex items-center gap-3">
             {isAuthenticated ? (
-              <Link to="/dashboard" className="portal-btn-primary px-5 py-2 text-sm">
-                Open Dashboard
-              </Link>
+              <div className="incubyte-btn-group">
+                <Link to="/dashboard" className="rounded-full bg-[#024738] px-5 py-2 text-xs font-bold text-white shadow-md shadow-[#024738]/20 hover:bg-[#013328] transition-all">
+                  Open Dashboard
+                </Link>
+                <Link to="/dashboard" className="rounded-full bg-[#C0F762] p-2 text-[#024738] shadow-md shadow-[#C0F762]/30 hover:scale-105 transition-transform">
+                  ↗
+                </Link>
+              </div>
             ) : (
               <>
-                <Link to="/login" className="text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors px-3 py-2">
+                <Link to="/login" className="text-xs font-bold text-[#024738] hover:text-[#059669] transition-colors px-3 py-2">
                   Sign In
                 </Link>
-                <Link to="/register" className="portal-btn-primary px-5 py-2 text-sm">
-                  Get Started
-                </Link>
+                <div className="incubyte-btn-group">
+                  <Link to="/register" className="rounded-full bg-[#024738] px-5 py-2 text-xs font-bold text-white shadow-md shadow-[#024738]/20 hover:bg-[#013328] transition-all">
+                    Talk to Us
+                  </Link>
+                  <Link to="/register" className="rounded-full bg-[#C0F762] p-2 text-[#024738] shadow-md shadow-[#C0F762]/30 hover:scale-105 transition-transform">
+                    ↗
+                  </Link>
+                </div>
               </>
             )}
           </div>
         </div>
       </nav>
 
-      {/* ── HERO ────────────────────────────────────── */}
-      <section className="relative overflow-hidden bg-gradient-to-b from-slate-50 to-white py-24 sm:py-32">
-        {/* subtle grid */}
-        <div
-          className="pointer-events-none absolute inset-0 opacity-[0.035]"
-          style={{
-            backgroundImage:
-              'linear-gradient(#6D5DFB 1px,transparent 1px),linear-gradient(90deg,#6D5DFB 1px,transparent 1px)',
-            backgroundSize: '56px 56px',
-          }}
-        />
-        {/* purple glow */}
-        <div className="pointer-events-none absolute top-0 left-1/2 -translate-x-1/2 h-96 w-[600px] rounded-full bg-[#6D5DFB]/8 blur-[80px]" />
-
+      <section className="relative overflow-hidden pt-20 pb-24 sm:pt-28 sm:pb-32">
         <div className="relative mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 text-center">
-          <div className="inline-flex items-center gap-2 rounded-full border border-[#6D5DFB]/25 bg-[#6D5DFB]/8 px-4 py-1.5 text-xs font-semibold text-[#6D5DFB] mb-8 animate-fade-in">
-            <span className="relative flex h-1.5 w-1.5">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#6D5DFB] opacity-60" />
-              <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-[#6D5DFB]" />
-            </span>
-            Automotive Inventory Management
-          </div>
-
-          <h1 className="text-5xl sm:text-6xl lg:text-7xl font-black tracking-tighter text-slate-900 leading-[1.05] mb-6 animate-fade-in-up">
-            The Premier Platform
+          
+          {/* Editorial Title */}
+          <h1 className="text-5xl sm:text-6xl lg:text-7xl font-serif font-bold tracking-tight text-[#024738] leading-[1.1] mb-6 animate-fade-in-up">
+            The rigor of engineering,
             <br />
-            <span className="bg-gradient-to-r from-[#6D5DFB] to-[#8B5CF6] bg-clip-text text-transparent">
-              for Auto Dealers
-            </span>
+            <span className="italic font-normal text-[#059669]">at AI's pace.</span>
           </h1>
 
-          <p className="mx-auto max-w-2xl text-lg text-slate-500 leading-relaxed mb-10 animate-fade-in-up animation-delay-150">
-            AutoVault gives your team real-time inventory visibility, seamless purchase processing, and powerful admin controls — all in one secure portal.
+          <p className="mx-auto max-w-2xl text-base sm:text-lg text-[#47695F] leading-relaxed font-medium mb-8 animate-fade-in-up animation-delay-150">
+            We embed craftsmanship, Test-Driven Development (TDD), and clean architecture into automotive inventory systems that are safe, compliant, and built to last.
           </p>
 
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-fade-in-up animation-delay-300">
-            <Link
-              to={isAuthenticated ? '/dashboard' : '/login'}
-              className="portal-btn-primary px-8 py-3.5 text-base font-bold w-full sm:w-auto"
-            >
-              {isAuthenticated ? 'Go to Dashboard' : 'Sign In to Portal'}
-            </Link>
-            {!isAuthenticated && (
-              <Link to="/register" className="portal-btn-secondary px-8 py-3.5 text-base font-bold w-full sm:w-auto">
-                Create Account
-              </Link>
-            )}
-          </div>
-        </div>
-      </section>
-
-      {/* ── STATS ───────────────────────────────────── */}
-      <section className="border-y border-slate-100 bg-slate-50">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
-            {stats.map((s) => (
-              <div key={s.label} className="text-center">
-                <div className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">{s.value}</div>
-                <div className="mt-1 text-xs font-semibold text-slate-400 uppercase tracking-widest">{s.label}</div>
-              </div>
+          {/* Incubyte Badge Chips */}
+          <div className="flex flex-wrap items-center justify-center gap-3 mb-10">
+            {['Spec-driven development', 'Test-driven development', 'Continuous delivery'].map((b) => (
+              <span key={b} className="inline-flex items-center gap-1.5 rounded-full border border-[#D1EFE0] bg-white px-4 py-1.5 text-xs font-bold text-[#024738] shadow-sm">
+                <span className="h-2 w-2 rounded-full bg-[#C0F762] border border-[#A3E635]" />
+                {b}
+              </span>
             ))}
           </div>
+
+          {/* Double Pill CTA */}
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-fade-in-up animation-delay-300">
+            <div className="incubyte-btn-group">
+              <Link
+                to={isAuthenticated ? '/dashboard' : '/login'}
+                className="rounded-full bg-[#024738] px-8 py-3.5 text-sm font-extrabold text-white shadow-lg shadow-[#024738]/25 hover:bg-[#013328] transition-all"
+              >
+                {isAuthenticated ? 'Go to Dashboard' : 'Talk to an engineer'}
+              </Link>
+              <Link
+                to={isAuthenticated ? '/dashboard' : '/login'}
+                className="rounded-full bg-[#C0F762] p-3.5 text-[#024738] font-extrabold shadow-lg shadow-[#C0F762]/40 hover:scale-105 transition-transform"
+              >
+                ↗
+              </Link>
+            </div>
+          </div>
         </div>
       </section>
 
-      {/* ── FEATURES ────────────────────────────────── */}
-      <section className="py-24">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-14">
-            <p className="text-xs font-bold uppercase tracking-widest text-[#6D5DFB] mb-3">What's Inside</p>
-            <h2 className="text-4xl font-black tracking-tight text-slate-900">Everything your dealership needs</h2>
-            <p className="mt-4 text-slate-500 max-w-xl mx-auto">
-              Built around the actual capabilities of your system — no feature bloat, no mock data.
+      <section className="py-20 bg-white border-y border-[#D1EFE0]">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl sm:text-5xl font-serif font-bold text-[#024738] mb-3">
+              Software is only as good as<br />the team using it.
+            </h2>
+            <p className="text-sm sm:text-base text-[#47695F] max-w-xl mx-auto font-medium">
+              We spent years building the TDD discipline and engineering rigor that amplifies automotive inventory management.
             </p>
           </div>
 
+          {/* 3 Incubyte Cards with Top Right Checkmark */}
           <div className="grid md:grid-cols-3 gap-6">
             {features.map((f) => (
               <div
                 key={f.title}
-                className="group portal-card p-8 hover:border-[#6D5DFB]/50 hover:-translate-y-1 transition-all duration-200 hover:shadow-lg hover:shadow-[#6D5DFB]/10"
+                className="relative rounded-3xl border border-[#D1EFE0] bg-[#F7FDF9] p-8 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:border-[#A3E635]"
               >
-                <div className="mb-5 inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-[#6D5DFB]/10 text-[#6D5DFB] group-hover:bg-[#6D5DFB]/15 transition-colors">
-                  {f.icon}
+                {/* Top Right Green Checkmark Badge */}
+                <div className="absolute top-6 right-6 flex h-8 w-8 items-center justify-center rounded-full bg-[#C0F762] text-[#024738] shadow-sm border border-[#A3E635]">
+                  <svg className="h-5 w-5 stroke-[3]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                  </svg>
                 </div>
-                <h3 className="text-lg font-bold text-slate-900 mb-2">{f.title}</h3>
-                <p className="text-sm text-slate-500 leading-relaxed">{f.desc}</p>
+
+                <span className="inline-block rounded-full bg-[#E8FCC9] text-[#024738] px-3 py-1 text-[10px] font-extrabold uppercase tracking-wider border border-[#B2F348] mb-4">
+                  {f.badge}
+                </span>
+
+                <h3 className="text-2xl font-serif font-bold text-[#024738] mb-3">{f.title}</h3>
+                <p className="text-xs sm:text-sm text-[#47695F] leading-relaxed font-medium">{f.desc}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ── ROLE BREAKDOWN ──────────────────────────── */}
-      <section className="py-20 bg-slate-50 border-y border-slate-100">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="grid lg:grid-cols-2 gap-6">
-            {/* Buyer */}
-            <div className="portal-card p-8 hover:border-emerald-300 transition-colors">
-              <div className="flex items-center gap-3 mb-6">
-                <div className="h-10 w-10 rounded-xl bg-emerald-50 border border-emerald-200 flex items-center justify-center">
-                  <svg className="h-5 w-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                  </svg>
-                </div>
-                <div>
-                  <p className="text-[10px] font-bold uppercase tracking-widest text-emerald-600">Buyer Role</p>
-                  <h3 className="text-lg font-bold text-slate-900">For Vehicle Buyers</h3>
-                </div>
+      {/* ── STATS SECTION ───────────────────────────── */}
+      <section className="py-16 bg-[#E8F7ED] border-b border-[#D1EFE0]">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
+            {stats.map((s) => (
+              <div key={s.label} className="text-center">
+                <div className="text-4xl sm:text-5xl font-serif font-bold text-[#024738]">{s.value}</div>
+                <div className="mt-2 text-xs font-bold text-[#47695F] uppercase tracking-widest">{s.label}</div>
               </div>
-              <ul className="space-y-3">
-                {['Browse full vehicle inventory', 'Filter by make, category & price', 'Purchase available vehicles', 'View your personal purchase history'].map((item) => (
-                  <li key={item} className="flex items-center gap-3 text-sm text-slate-600">
-                    <svg className="h-4 w-4 text-emerald-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
-                    </svg>
-                    {item}
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            {/* Admin */}
-            <div className="portal-card p-8 hover:border-amber-300 transition-colors">
-              <div className="flex items-center gap-3 mb-6">
-                <div className="h-10 w-10 rounded-xl bg-amber-50 border border-amber-200 flex items-center justify-center">
-                  <svg className="h-5 w-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                  </svg>
-                </div>
-                <div>
-                  <p className="text-[10px] font-bold uppercase tracking-widest text-amber-600">Admin Role</p>
-                  <h3 className="text-lg font-bold text-slate-900">For Dealership Staff</h3>
-                </div>
-              </div>
-              <ul className="space-y-3">
-                {['Everything buyers can do', 'Add, edit & remove vehicles', 'Restock inventory quantities', 'Review all sales transactions', 'Inventory analytics from real data'].map((item) => (
-                  <li key={item} className="flex items-center gap-3 text-sm text-slate-600">
-                    <svg className="h-4 w-4 text-amber-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
-                    </svg>
-                    {item}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ── CTA ─────────────────────────────────────── */}
-      <section className="py-24">
-        <div className="mx-auto max-w-3xl px-4 sm:px-6 text-center">
-          <h2 className="text-4xl font-black tracking-tight text-slate-900 mb-4">
-            Ready to access the portal?
-          </h2>
-          <p className="text-slate-500 mb-8">
-            Sign in with your dealership credentials or create a new account to get started.
-          </p>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Link to="/login" className="portal-btn-primary px-10 py-3.5 text-base font-bold w-full sm:w-auto">
-              Sign In
-            </Link>
-            <Link to="/register" className="portal-btn-secondary px-10 py-3.5 text-base font-bold w-full sm:w-auto">
-              Create Account
-            </Link>
+            ))}
           </div>
         </div>
       </section>
 
       {/* ── FOOTER ──────────────────────────────────── */}
-      <footer className="border-t border-slate-200 py-8 bg-slate-50">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <footer className="border-t border-[#D1EFE0] py-10 bg-white">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2">
-            <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#6D5DFB]">
-              <svg className="h-4 w-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="flex h-7 w-7 items-center justify-center rounded-full bg-[#024738]">
+              <svg className="h-4 w-4 text-[#C0F762]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
               </svg>
             </div>
-            <span className="text-sm font-bold text-slate-500">
-              Auto<span className="text-[#6D5DFB]">Vault</span>
+            <span className="text-sm font-bold text-[#024738]">
+              Auto<span className="text-[#059669]">Vault</span>
             </span>
           </div>
-          <p className="text-xs text-slate-400">
-            © {new Date().getFullYear()} AutoVault. Dealership Inventory Management System.
+          <p className="text-xs text-[#5E7E75] font-medium">
+            © {new Date().getFullYear()} AutoVault. Car Dealership Inventory System.
           </p>
         </div>
       </footer>

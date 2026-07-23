@@ -1,7 +1,7 @@
 {
   "name": "car-dealership-inventory-system",
   "version": "1.0.0",
-  "description": "Car Dealership Inventory System - Incubyte Assessment",
+  "description": "Car Dealership Inventory System",
   "main": "src/app.ts",
   "scripts": {
     "build": "tsc",
