@@ -59,7 +59,7 @@ export default function LandingPage() {
                 <Link to="/dashboard" className="rounded-full bg-[#024738] px-5 py-2 text-xs font-bold text-white shadow-md shadow-[#024738]/20 hover:bg-[#013328] transition-all">
                   Open Dashboard
                 </Link>
-                <Link to="/dashboard" className="rounded-full bg-[#C0F762] p-2 text-[#024738] shadow-md shadow-[#C0F762]/30 hover:scale-105 transition-transform">
+                <Link to="/dashboard" className="rounded-full bg-[#C0F762] px-2 py-0.5 text-[#024738] shadow-md shadow-[#C0F762]/30 hover:scale-105 transition-transform">
                   ↗
                 </Link>
               </div>
@@ -72,7 +72,7 @@ export default function LandingPage() {
                   <Link to="/register" className="rounded-full bg-[#024738] px-5 py-2 text-xs font-bold text-white shadow-md shadow-[#024738]/20 hover:bg-[#013328] transition-all">
                     Talk to Us
                   </Link>
-                  <Link to="/register" className="rounded-full bg-[#C0F762] p-2 text-[#024738] shadow-md shadow-[#C0F762]/30 hover:scale-105 transition-transform">
+                  <Link to="/register" className="rounded-full bg-[#C0F762] px-2 py-0.5 text-[#024738] shadow-md shadow-[#C0F762]/30 hover:scale-105 transition-transform">
                     ↗
                   </Link>
                 </div>
@@ -117,7 +117,7 @@ export default function LandingPage() {
               </Link>
               <Link
                 to={isAuthenticated ? '/dashboard' : '/login'}
-                className="rounded-full bg-[#C0F762] p-3.5 text-[#024738] font-extrabold shadow-lg shadow-[#C0F762]/40 hover:scale-105 transition-transform"
+                className="rounded-full bg-[#C0F762] p-3.5 py-2 text-[#024738] font-extrabold shadow-lg shadow-[#C0F762]/40 hover:scale-105 transition-transform"
               >
                 ↗
               </Link>
