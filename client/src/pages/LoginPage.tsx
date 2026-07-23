@@ -17,10 +17,7 @@ export default function LoginPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
-    if (!email.trim() || !password) {
-      setError('Please fill in all fields');
-      return;
-    }
+    if (!email.trim() || !password) { setError('Please fill in all fields'); return; }
     setLoading(true);
     try {
       const response = await authApi.login(email.trim(), password);
@@ -40,57 +37,44 @@ export default function LoginPage() {
     }
   };
 
-  const handleQuickLogin = (demoEmail: string, demoPass: string) => {
-    setEmail(demoEmail);
-    setPassword(demoPass);
-    setError(null);
-  };
-
   return (
-    <div className="min-h-screen bg-[#060B18] flex">
-      {/* ── LEFT PANEL — branding ───────────────────────────── */}
-      <div className="hidden lg:flex lg:w-1/2 relative flex-col items-center justify-center p-12 overflow-hidden">
-        {/* Background glows */}
-        <div className="pointer-events-none absolute inset-0">
-          <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 h-[500px] w-[500px] rounded-full bg-[#6D5DFB]/12 blur-[100px]" />
-          <div className="absolute bottom-1/4 right-1/4 h-[300px] w-[300px] rounded-full bg-[#A78BFA]/8 blur-[80px]" />
+    <div className="min-h-screen bg-white flex">
+      {/* ── Left branding panel ─────────────────────── */}
+      <div className="hidden lg:flex lg:w-1/2 relative flex-col items-center justify-center p-12 bg-slate-50 border-r border-slate-200">
+        <div className="pointer-events-none absolute inset-0 overflow-hidden">
+          <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 h-[500px] w-[500px] rounded-full bg-[#6D5DFB]/6 blur-[80px]" />
           <div
-            className="absolute inset-0 opacity-[0.035]"
+            className="absolute inset-0 opacity-[0.03]"
             style={{
-              backgroundImage:
-                'linear-gradient(rgba(255,255,255,0.4) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.4) 1px, transparent 1px)',
-              backgroundSize: '50px 50px',
+              backgroundImage: 'linear-gradient(#6D5DFB 1px,transparent 1px),linear-gradient(90deg,#6D5DFB 1px,transparent 1px)',
+              backgroundSize: '48px 48px',
             }}
           />
         </div>
 
-        <div className="relative text-center max-w-md">
+        <div className="relative text-center max-w-sm">
           <Link to="/" className="inline-flex items-center gap-3 mb-12">
-            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-tr from-[#6D5DFB] to-[#A78BFA] shadow-xl shadow-[#6D5DFB]/30">
-              <svg className="h-7 w-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#6D5DFB] shadow-lg shadow-[#6D5DFB]/25">
+              <svg className="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
               </svg>
             </div>
-            <span className="text-2xl font-black tracking-tight text-white">
+            <span className="text-2xl font-black tracking-tight text-slate-900">
               Auto<span className="text-[#6D5DFB]">Vault</span>
             </span>
           </Link>
 
-          <h2 className="text-4xl font-black tracking-tight text-white leading-tight mb-4">
+          <h2 className="text-3xl font-black tracking-tight text-slate-900 leading-tight mb-4">
             Your dealership's<br />
-            <span className="text-[#A78BFA]">control center.</span>
+            <span className="text-[#6D5DFB]">control center.</span>
           </h2>
-          <p className="text-gray-400 leading-relaxed text-sm">
+          <p className="text-slate-500 leading-relaxed text-sm">
             Manage inventory, process purchases, and track sales — all from a single, secure portal built for automotive professionals.
           </p>
 
-          {/* Feature pills */}
           <div className="mt-10 flex flex-wrap justify-center gap-2">
             {['Live Inventory', 'Purchase Tracking', 'Sales Analytics', 'Admin Controls'].map((t) => (
-              <span
-                key={t}
-                className="rounded-full border border-white/10 bg-white/5 px-3.5 py-1.5 text-xs font-medium text-gray-300"
-              >
+              <span key={t} className="rounded-full border border-slate-200 bg-white px-3.5 py-1.5 text-xs font-medium text-slate-500 shadow-sm">
                 {t}
               </span>
             ))}
@@ -98,37 +82,35 @@ export default function LoginPage() {
         </div>
       </div>
 
-      {/* ── RIGHT PANEL — form ──────────────────────────────── */}
-      <div className="flex w-full lg:w-1/2 flex-col items-center justify-center px-6 py-12 bg-[#0B1020]">
-        {/* Mobile logo */}
+      {/* ── Right form panel ────────────────────────── */}
+      <div className="flex w-full lg:w-1/2 flex-col items-center justify-center px-6 py-12">
         <Link to="/" className="lg:hidden flex items-center gap-2 mb-10">
-          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-tr from-[#6D5DFB] to-[#A78BFA]">
+          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#6D5DFB]">
             <svg className="h-5 w-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
             </svg>
           </div>
-          <span className="text-xl font-black text-white">Auto<span className="text-[#6D5DFB]">Vault</span></span>
+          <span className="text-xl font-black text-slate-900">Auto<span className="text-[#6D5DFB]">Vault</span></span>
         </Link>
 
         <div className="w-full max-w-sm">
           <div className="mb-8">
-            <h1 className="text-2xl font-black text-white tracking-tight">Welcome back</h1>
-            <p className="mt-1 text-sm text-gray-400">Sign in to your dealer portal</p>
+            <h1 className="text-2xl font-black text-slate-900 tracking-tight">Welcome back</h1>
+            <p className="mt-1 text-sm text-slate-500">Sign in to your dealer portal</p>
           </div>
 
-          {/* Error */}
           {error && (
-            <div className="mb-5 flex items-center gap-3 rounded-xl border border-[#F04438]/30 bg-[#F04438]/10 p-3.5 text-sm text-[#F04438] animate-fade-in">
+            <div className="mb-5 flex items-center gap-3 rounded-xl border border-red-200 bg-red-50 p-3.5 text-sm text-red-600 animate-fade-in">
               <svg className="h-4 w-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
-              <span>{error}</span>
+              {error}
             </div>
           )}
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-xs font-semibold text-gray-400 mb-1.5 uppercase tracking-wider">
+              <label className="block text-xs font-semibold text-slate-500 mb-1.5 uppercase tracking-wider">
                 Email Address
               </label>
               <input
@@ -143,7 +125,7 @@ export default function LoginPage() {
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-gray-400 mb-1.5 uppercase tracking-wider">
+              <label className="block text-xs font-semibold text-slate-500 mb-1.5 uppercase tracking-wider">
                 Password
               </label>
               <div className="relative">
@@ -159,7 +141,7 @@ export default function LoginPage() {
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-300 transition-colors"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors"
                   tabIndex={-1}
                 >
                   {showPassword ? (
@@ -179,45 +161,43 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="portal-btn-primary w-full py-3 text-sm font-bold mt-2 disabled:opacity-60 disabled:cursor-not-allowed"
+              className="portal-btn-primary w-full py-3 text-sm font-bold mt-1 disabled:opacity-60 disabled:cursor-not-allowed"
             >
               {loading ? (
                 <div className="flex items-center justify-center gap-2">
-                  <div className="h-4 w-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                  <span>Signing in…</span>
+                  <div className="h-4 w-4 border-2 border-white/40 border-t-white rounded-full animate-spin" />
+                  Signing in…
                 </div>
-              ) : (
-                'Sign In'
-              )}
+              ) : 'Sign In'}
             </button>
           </form>
 
-          {/* Quick fill */}
-          <div className="mt-6 pt-5 border-t border-white/8">
-            <p className="text-center text-[10px] font-semibold uppercase tracking-widest text-gray-600 mb-3">
+          {/* Demo credentials */}
+          <div className="mt-6 pt-5 border-t border-slate-100">
+            <p className="text-center text-[10px] font-semibold uppercase tracking-widest text-slate-400 mb-3">
               Demo Credentials
             </p>
             <div className="grid grid-cols-2 gap-2">
               <button
                 type="button"
-                onClick={() => handleQuickLogin('admin@dealership.com', 'AdminPass123!')}
-                className="portal-btn-secondary py-2 text-xs font-semibold hover:border-[#F5A524]/40 hover:text-[#F5A524] transition-colors"
+                onClick={() => { setEmail('admin@dealership.com'); setPassword('AdminPass123!'); setError(null); }}
+                className="portal-btn-secondary py-2 text-xs font-semibold hover:border-amber-300 hover:text-amber-600 transition-colors"
               >
                 Admin Access
               </button>
               <button
                 type="button"
-                onClick={() => handleQuickLogin('buyer@dealership.com', 'UserPass123!')}
-                className="portal-btn-secondary py-2 text-xs font-semibold hover:border-[#16C784]/40 hover:text-[#16C784] transition-colors"
+                onClick={() => { setEmail('buyer@dealership.com'); setPassword('UserPass123!'); setError(null); }}
+                className="portal-btn-secondary py-2 text-xs font-semibold hover:border-emerald-300 hover:text-emerald-600 transition-colors"
               >
                 Buyer Access
               </button>
             </div>
           </div>
 
-          <p className="mt-6 text-center text-xs text-gray-500">
+          <p className="mt-6 text-center text-xs text-slate-400">
             Don't have an account?{' '}
-            <Link to="/register" className="font-semibold text-[#6D5DFB] hover:text-[#A78BFA] transition-colors">
+            <Link to="/register" className="font-semibold text-[#6D5DFB] hover:underline">
               Register here
             </Link>
           </p>

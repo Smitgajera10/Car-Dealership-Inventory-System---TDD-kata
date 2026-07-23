@@ -12,90 +12,80 @@
     scroll-behavior: smooth;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    background-color: #060B18;
-    color: #F3F4F6;
+    background-color: #F8FAFC;
+    color: #0F172A;
   }
 
   body {
-    background-color: #060B18;
-    color: #F3F4F6;
+    background-color: #F8FAFC;
+    color: #0F172A;
     min-height: 100vh;
     overflow-x: hidden;
   }
 
-  /* Custom scrollbar */
-  ::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
-  }
-  ::-webkit-scrollbar-track {
-    background: transparent;
-  }
-  ::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 9999px;
-  }
-  ::-webkit-scrollbar-thumb:hover {
-    background: rgba(109, 93, 251, 0.45);
-  }
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: #F1F5F9; }
+  ::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 9999px; }
+  ::-webkit-scrollbar-thumb:hover { background: #6D5DFB; }
 }
 
 @layer components {
-  /* ── Cards ──────────────────────────────────────────── */
+  /* ── Cards ──────────────────────────────── */
   .portal-card {
-    background-color: #131B2F;
-    border: 1px solid rgba(255, 255, 255, 0.07);
+    background-color: #FFFFFF;
+    border: 1px solid #E2E8F0;
     border-radius: 16px;
-    box-shadow: 0 4px 24px -4px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 1px 4px 0 rgba(15, 23, 42, 0.06);
   }
 
   .portal-card-hover {
-    background-color: #131B2F;
-    border: 1px solid rgba(255, 255, 255, 0.07);
+    background-color: #FFFFFF;
+    border: 1px solid #E2E8F0;
     border-radius: 16px;
-    box-shadow: 0 4px 24px -4px rgba(0, 0, 0, 0.5);
-    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 1px 4px 0 rgba(15, 23, 42, 0.06);
+    transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   .portal-card-hover:hover {
-    border-color: rgba(109, 93, 251, 0.35);
+    border-color: #6D5DFB;
     transform: translateY(-3px);
-    box-shadow: 0 16px 32px -8px rgba(0, 0, 0, 0.7), 0 0 20px -4px rgba(109, 93, 251, 0.2);
+    box-shadow: 0 12px 28px -8px rgba(109, 93, 251, 0.18), 0 2px 8px rgba(15, 23, 42, 0.08);
   }
 
-  /* ── Inputs ─────────────────────────────────────────── */
+  /* ── Inputs ─────────────────────────────── */
   .portal-input {
     width: 100%;
-    background-color: #0B1020;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 12px;
-    color: #F3F4F6;
+    background-color: #FFFFFF;
+    border: 1px solid #E2E8F0;
+    border-radius: 10px;
+    color: #0F172A;
     padding: 0.625rem 1rem;
     font-size: 0.875rem;
     transition: border-color 0.2s, box-shadow 0.2s;
     outline: none;
   }
 
-  .portal-input::placeholder {
-    color: #4B5563;
-  }
+  .portal-input::placeholder { color: #94A3B8; }
 
   .portal-input:focus {
     border-color: #6D5DFB;
-    box-shadow: 0 0 0 3px rgba(109, 93, 251, 0.18);
+    box-shadow: 0 0 0 3px rgba(109, 93, 251, 0.12);
   }
 
-  /* ── Buttons ─────────────────────────────────────────── */
+  /* select option colours */
+  .portal-input option { background: #fff; color: #0F172A; }
+
+  /* ── Buttons ────────────────────────────── */
   .portal-btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
-    border-radius: 12px;
+    border-radius: 10px;
     padding: 0.55rem 1.15rem;
     font-size: 0.875rem;
     font-weight: 600;
-    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
     cursor: pointer;
     user-select: none;
     white-space: nowrap;
@@ -105,107 +95,75 @@
     @apply portal-btn;
     background-color: #6D5DFB;
     color: #ffffff;
-    box-shadow: 0 2px 12px rgba(109, 93, 251, 0.35);
+    box-shadow: 0 2px 8px rgba(109, 93, 251, 0.3);
   }
-
   .portal-btn-primary:hover:not(:disabled) {
     background-color: #5B4BE3;
-    box-shadow: 0 4px 20px rgba(109, 93, 251, 0.5);
+    box-shadow: 0 4px 16px rgba(109, 93, 251, 0.4);
     transform: translateY(-1px);
   }
-
-  .portal-btn-primary:active:not(:disabled) {
-    transform: translateY(0);
-  }
+  .portal-btn-primary:active:not(:disabled) { transform: translateY(0); }
 
   .portal-btn-secondary {
     @apply portal-btn;
-    background-color: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    color: #E5E7EB;
+    background-color: #F8FAFC;
+    border: 1px solid #E2E8F0;
+    color: #475569;
   }
-
   .portal-btn-secondary:hover:not(:disabled) {
-    background-color: rgba(255, 255, 255, 0.09);
-    border-color: rgba(255, 255, 255, 0.18);
-    color: #ffffff;
+    background-color: #F1F5F9;
+    border-color: #CBD5E1;
+    color: #0F172A;
   }
 
   .portal-btn-danger {
     @apply portal-btn;
-    background-color: rgba(240, 68, 56, 0.12);
-    border: 1px solid rgba(240, 68, 56, 0.25);
-    color: #F04438;
+    background-color: #FEF2F2;
+    border: 1px solid #FECACA;
+    color: #EF4444;
   }
-
   .portal-btn-danger:hover:not(:disabled) {
-    background-color: #F04438;
+    background-color: #EF4444;
+    border-color: #EF4444;
     color: #ffffff;
-    box-shadow: 0 4px 14px rgba(240, 68, 56, 0.4);
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.35);
   }
 
-  /* ── Skeleton ────────────────────────────────────────── */
+  /* ── Skeleton ───────────────────────────── */
   .skeleton {
-    background: linear-gradient(
-      90deg,
-      rgba(255, 255, 255, 0.04) 25%,
-      rgba(255, 255, 255, 0.08) 50%,
-      rgba(255, 255, 255, 0.04) 75%
-    );
+    background: linear-gradient(90deg, #F1F5F9 25%, #E2E8F0 50%, #F1F5F9 75%);
     background-size: 400% 100%;
     animation: skeleton-loading 1.4s ease infinite;
-    border-radius: 10px;
+    border-radius: 8px;
   }
 }
 
-/* ── Keyframes ───────────────────────────────────────── */
+/* ── Keyframes ──────────────────────────────── */
 @keyframes skeleton-loading {
   0%   { background-position: 100% 50%; }
   100% { background-position: 0%   50%; }
 }
-
 @keyframes fade-in {
   from { opacity: 0; }
   to   { opacity: 1; }
 }
-
 @keyframes fade-in-up {
   from { opacity: 0; transform: translateY(16px); }
   to   { opacity: 1; transform: translateY(0); }
 }
-
 @keyframes slide-up {
   from { opacity: 0; transform: translateY(8px); }
   to   { opacity: 1; transform: translateY(0); }
 }
-
 @keyframes gradient-shift {
   0%   { background-position: 0%   50%; }
   50%  { background-position: 100% 50%; }
   100% { background-position: 0%   50%; }
 }
 
-/* ── Utility animation classes ───────────────────────── */
-.animate-fade-in {
-  animation: fade-in 0.35s ease both;
-}
-
-.animate-fade-in-up {
-  animation: fade-in-up 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
-}
-
-.animation-delay-150 {
-  animation-delay: 150ms;
-}
-
-.animation-delay-300 {
-  animation-delay: 300ms;
-}
-
-.animate-slide-up {
-  animation: slide-up 0.2s cubic-bezier(0.16, 1, 0.3, 1) both;
-}
-
-.animate-gradient {
-  animation: gradient-shift 4s ease infinite;
-}
+.animate-fade-in       { animation: fade-in 0.3s ease both; }
+.animate-fade-in-up    { animation: fade-in-up 0.45s cubic-bezier(0.16,1,0.3,1) both; }
+.animation-delay-150   { animation-delay: 150ms; }
+.animation-delay-300   { animation-delay: 300ms; }
+.animate-slide-up      { animation: slide-up 0.18s cubic-bezier(0.16,1,0.3,1) both; }
+.animate-gradient      { animation: gradient-shift 4s ease infinite; }

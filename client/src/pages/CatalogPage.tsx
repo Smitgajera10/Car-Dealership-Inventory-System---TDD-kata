@@ -244,7 +244,7 @@ export default function CatalogPage() {
   }, [vehicles, searchTerm, globalSearch, selectedCategory, selectedMake, stockStatus, minPrice, maxPrice, sortBy]);
 
   return (
-    <div className="min-h-screen bg-[#0B1020] text-[#F3F4F6] pb-24">
+    <div className="min-h-screen bg-slate-50 text-slate-900 pb-24">
       {/* Top Navbar */}
       <Navbar
         activeTab={activeTab}
