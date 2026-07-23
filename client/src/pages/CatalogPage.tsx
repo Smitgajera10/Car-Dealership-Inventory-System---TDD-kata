@@ -11,8 +11,7 @@ import { RestockModal } from '../components/RestockModal';
 import { DeleteModal } from '../components/DeleteModal';
 import { FloatingActionButton } from '../components/FloatingActionButton';
 import { AnalyticsView } from '../components/AnalyticsView';
-import { SalesView } from '../components/SalesView';  
-import { CustomersView } from '../components/CustomersView';
+import { SalesView } from '../components/SalesView';
 import { MyPurchasesView } from '../components/MyPurchasesView';
 import { getVehicleSpecs } from '../utils/carHelpers';
 import Axios from 'axios';
@@ -281,8 +280,6 @@ export default function CatalogPage() {
           <AnalyticsView vehicles={vehicles} />
         ) : activeTab === 'sales' ? (
           <SalesView />
-        ) : activeTab === 'customers' ? (
-          <CustomersView />
         ) : activeTab === 'my-purchases' ? (
           <MyPurchasesView />
         ) : (
