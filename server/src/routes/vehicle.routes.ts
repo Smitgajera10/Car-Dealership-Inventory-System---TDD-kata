@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { VehicleController } from '../controllers/vehicle.controller';
 import { VehicleService } from '../services/vehicle.service';
 import { VehicleRepository } from '../repositories/vehicle.repository';
+import { PurchaseRepository } from '../repositories/purchase.repository';
 import { authenticateToken } from '../middleware/auth.middleware';
 import { requireAdmin } from '../middleware/admin.middleware';
 import { asyncHandler } from '../middleware/async-handler';
@@ -9,7 +10,8 @@ import { asyncHandler } from '../middleware/async-handler';
 const router = Router();
 
 const vehicleRepository = new VehicleRepository();
-const vehicleService = new VehicleService(vehicleRepository);
+const purchaseRepository = new PurchaseRepository();
+const vehicleService = new VehicleService(vehicleRepository, purchaseRepository);
 const vehicleController = new VehicleController(vehicleService);
 
 router.get('/', asyncHandler(vehicleController.getAll.bind(vehicleController)));
