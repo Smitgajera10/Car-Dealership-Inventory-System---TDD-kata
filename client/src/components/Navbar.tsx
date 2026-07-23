@@ -1,9 +1,11 @@
 import { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 
+export type NavTab = 'inventory' | 'analytics' | 'sales' | 'customers' | 'my-purchases';
+
 interface NavbarProps {
-  activeTab: 'inventory' | 'analytics' | 'sales' | 'customers';
-  setActiveTab: (tab: 'inventory' | 'analytics' | 'sales' | 'customers') => void;
+  activeTab: NavTab;
+  setActiveTab: (tab: NavTab) => void;
   globalSearch: string;
   setGlobalSearch: (q: string) => void;
   onOpenAddModal?: () => void;
@@ -57,9 +59,12 @@ export function Navbar({
           </div>
         </div>
 
-        {/* Center: Navigation Tabs */}
+        {/* Center: Navigation Tabs — role-based */}
         <nav className="hidden lg:flex items-center gap-1 rounded-xl bg-[#131B2F] p-1 border border-white/10">
-          {(['inventory', 'analytics', 'sales', 'customers'] as const).map((tab) => (
+          {(isAdmin
+            ? (['inventory', 'analytics', 'sales', 'customers'] as const)
+            : (['inventory', 'my-purchases'] as const)
+          ).map((tab) => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
@@ -69,7 +74,7 @@ export function Navbar({
                   : 'text-gray-400 hover:text-white hover:bg-white/5'
               }`}
             >
-              {tab}
+              {tab === 'my-purchases' ? 'My Purchases' : tab}
             </button>
           ))}
         </nav>

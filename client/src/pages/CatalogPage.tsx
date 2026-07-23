@@ -2,7 +2,7 @@ import { useState, useMemo } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { vehicleApi } from '../services/api.service';
 import type { Vehicle, AddVehiclePayload, UpdateVehiclePayload } from '../types';
-import { Navbar } from '../components/Navbar';
+import { Navbar, type NavTab } from '../components/Navbar';
 import { DashboardMetrics } from '../components/DashboardMetrics';
 import { SearchFilters } from '../components/SearchFilters';
 import { VehicleCard } from '../components/VehicleCard';
@@ -11,16 +11,17 @@ import { RestockModal } from '../components/RestockModal';
 import { DeleteModal } from '../components/DeleteModal';
 import { FloatingActionButton } from '../components/FloatingActionButton';
 import { AnalyticsView } from '../components/AnalyticsView';
-import { SalesView } from '../components/SalesView';
+import { SalesView } from '../components/SalesView';  
 import { CustomersView } from '../components/CustomersView';
+import { MyPurchasesView } from '../components/MyPurchasesView';
 import { getVehicleSpecs } from '../utils/carHelpers';
 import Axios from 'axios';
 
 export default function CatalogPage() {
   const queryClient = useQueryClient();
 
-  // Navigation tab state ('inventory' | 'analytics' | 'sales' | 'customers')
-  const [activeTab, setActiveTab] = useState<'inventory' | 'analytics' | 'sales' | 'customers'>('inventory');
+  // Navigation tab state
+  const [activeTab, setActiveTab] = useState<NavTab>('inventory');
 
   // Search & Filter state
   const [searchTerm, setSearchTerm] = useState('');
@@ -71,10 +72,12 @@ export default function CatalogPage() {
       const res = await vehicleApi.purchase(id);
       return res.data.data;
     },
-    onSuccess: (updatedVehicle) => {
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['vehicles'] });
+      queryClient.invalidateQueries({ queryKey: ['my-purchases'] });
+      queryClient.invalidateQueries({ queryKey: ['all-purchases'] });
       showNotification(
-        `🎉 Purchase Successful! ${updatedVehicle.make} ${updatedVehicle.model} order processed.`
+        `🎉 Purchase Successful! Your order has been processed.`
       );
     },
     onError: (err: unknown) => {
@@ -280,6 +283,8 @@ export default function CatalogPage() {
           <SalesView />
         ) : activeTab === 'customers' ? (
           <CustomersView />
+        ) : activeTab === 'my-purchases' ? (
+          <MyPurchasesView />
         ) : (
           /* Inventory Tab View */
           <>

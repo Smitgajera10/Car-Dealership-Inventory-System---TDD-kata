@@ -71,3 +71,22 @@ export interface UpdateVehiclePayload {
   quantity?: number;
   imageUrl?: string | null;
 }
+
+export interface Purchase {
+  id: string;
+  userId: string;
+  vehicleId: string;
+  purchasePrice: number;
+  createdAt: string;
+  vehicle: Vehicle;
+  user?: {
+    id: string;
+    email: string;
+    role: string;
+  };
+}
+
+export interface PurchaseListResponse {
+  success: boolean;
+  data: Purchase[];
+}

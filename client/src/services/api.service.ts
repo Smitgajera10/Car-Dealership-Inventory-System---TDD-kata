@@ -6,6 +6,7 @@ import type {
   VehicleSearchParams,
   AddVehiclePayload,
   UpdateVehiclePayload,
+  PurchaseListResponse,
 } from '../types';
 
 // ── Auth ────────────────────────────────────────────
@@ -39,4 +40,13 @@ export const vehicleApi = {
 
   restock: (id: string, amount: number) =>
     api.post<VehicleResponse>(`/vehicles/${id}/restock`, { amount }),
+};
+
+// ── Purchases ───────────────────────────────────────
+export const purchaseApi = {
+  getMyPurchases: () =>
+    api.get<PurchaseListResponse>('/purchases/my'),
+
+  getAllPurchases: () =>
+    api.get<PurchaseListResponse>('/purchases'),
 };
